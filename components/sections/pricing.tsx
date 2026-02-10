@@ -47,8 +47,8 @@ interface PricingProps {
 const defaultPlans: PricingPlan[] = [
     {
         name: "Starter",
-        price: "15",
-        yearlyPrice: "12",
+        price: "10",
+        yearlyPrice: "8",
         period: "month",
         features: [
             "Real-time profit tracking",
@@ -63,8 +63,8 @@ const defaultPlans: PricingPlan[] = [
     },
     {
         name: "Founder",
-        price: "30",
-        yearlyPrice: "25",
+        price: "25",
+        yearlyPrice: "20",
         period: "month",
         features: [
             "Everything in Starter",
