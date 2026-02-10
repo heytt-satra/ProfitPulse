@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useId, useEffect, CSSProperties } from "react";
+import React, { CSSProperties } from "react";
 
 interface ShadowOverlayProps {
     type?: string;
@@ -15,70 +15,18 @@ interface ShadowOverlayProps {
     children?: React.ReactNode;
 }
 
-function mapRange(
-    value: number,
-    fromLow: number,
-    fromHigh: number,
-    toLow: number,
-    toHigh: number
-): number {
-    if (fromLow === fromHigh) return toLow;
-    const percentage = (value - fromLow) / (fromHigh - fromLow);
-    return toLow + percentage * (toHigh - toLow);
-}
-
-const useInstanceId = (): string => {
-    const id = useId();
-    return `shadowoverlay-${id.replace(/:/g, "")}`;
-};
-
+/**
+ * Replaces SVG feTurbulence/feDisplacementMap with CSS-only animated mesh.
+ * Uses multiple soft gradient blobs with slow CSS transform animations.
+ * All keyframes use ONLY transform + opacity (GPU compositor properties)
+ * so scrolling and blob movement happen on separate threads = zero jank.
+ */
 export function ShadowOverlay({
-    sizing = "fill",
     color = "#2B2E4A",
-    animation = { scale: 50, speed: 30, preview: false },
     style,
     className,
     children,
 }: ShadowOverlayProps) {
-    const id = useInstanceId();
-    const animationEnabled = animation && (animation.scale ?? 0) > 0;
-    const hueAnimRef = useRef<number | null>(null);
-
-    const displacementScale = animation
-        ? mapRange(animation.scale ?? 50, 1, 100, 20, 100)
-        : 0;
-    const animationDuration = animation
-        ? mapRange(animation.speed ?? 30, 1, 100, 1000, 50)
-        : 1;
-
-    // Use a native rAF loop instead of framer-motion animate() to avoid
-    // per-frame React overhead. Runs entirely outside React's lifecycle.
-    useEffect(() => {
-        if (!animationEnabled) return;
-
-        let startTime: number | null = null;
-        const cycleDuration = (animationDuration / 2) * 1000; // ms for full 360°
-
-        const tick = (timestamp: number) => {
-            if (startTime === null) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            const hueValue = (elapsed / cycleDuration) * 360 % 360;
-
-            const matrix = document.getElementById(`${id}-matrix`);
-            if (matrix) {
-                matrix.setAttribute("values", String(Math.round(hueValue)));
-            }
-
-            hueAnimRef.current = requestAnimationFrame(tick);
-        };
-
-        hueAnimRef.current = requestAnimationFrame(tick);
-
-        return () => {
-            if (hueAnimRef.current) cancelAnimationFrame(hueAnimRef.current);
-        };
-    }, [animationEnabled, animationDuration, id]);
-
     return (
         <div
             className={className}
@@ -89,75 +37,60 @@ export function ShadowOverlay({
                 width: "100%",
                 height: "100%",
                 backgroundColor: "#0F0F0F",
-                // Isolate this entire subtree on its own compositor layer
-                contain: "strict",
                 ...style,
             }}
         >
+            {/* Atmospheric mesh gradient layer */}
             <div
-                style={{
-                    position: "absolute",
-                    inset: -displacementScale,
-                    filter: animationEnabled ? `url(#${id})` : "none",
-                    opacity: 0.9,
-                    willChange: "filter",
-                    transform: "translateZ(0)", // Force GPU layer
-                }}
+                className="shadow-mesh-layer"
+                aria-hidden="true"
             >
-                {animationEnabled && (
-                    <svg
-                        style={{ position: "absolute", width: 0, height: 0 }}
-                        aria-hidden="true"
-                    >
-                        <defs>
-                            <filter id={id}>
-                                <feTurbulence
-                                    result="undulation"
-                                    numOctaves={2}
-                                    baseFrequency={`${mapRange(
-                                        animation.scale ?? 50,
-                                        0, 100, 0.001, 0.0005
-                                    )},${mapRange(
-                                        animation.scale ?? 50,
-                                        0, 100, 0.004, 0.002
-                                    )}`}
-                                    seed="0"
-                                    type="turbulence"
-                                />
-                                <feColorMatrix
-                                    id={`${id}-matrix`}
-                                    in="undulation"
-                                    type="hueRotate"
-                                    values="0"
-                                />
-                                <feColorMatrix
-                                    in="undulation"
-                                    result="circulation"
-                                    type="matrix"
-                                    values="4 0 0 0 1  4 0 0 0 1  4 0 0 0 1  1 0 0 0 0"
-                                />
-                                <feDisplacementMap
-                                    in="SourceGraphic"
-                                    in2="undulation"
-                                    scale={displacementScale}
-                                    result="dist"
-                                />
-                            </filter>
-                        </defs>
-                    </svg>
-                )}
+                {/* Primary indigo cloud — large, dominant */}
                 <div
+                    className="mesh-blob mesh-blob-1"
                     style={{
-                        backgroundColor: color,
-                        maskImage: `url('https://framerusercontent.com/images/ceBGguIpUU8luwByxuQz79t7To.png')`,
-                        maskSize: sizing === "stretch" ? "100% 100%" : "cover",
-                        maskRepeat: "no-repeat",
-                        maskPosition: "center",
-                        width: "100%",
-                        height: "100%",
+                        background: `radial-gradient(circle, ${color} 0%, ${color}99 25%, ${color}33 50%, transparent 70%)`,
+                    }}
+                />
+
+                {/* Secondary indigo — offset, creates depth */}
+                <div
+                    className="mesh-blob mesh-blob-2"
+                    style={{
+                        background: `radial-gradient(circle, ${color}cc 0%, ${color}66 30%, ${color}1a 55%, transparent 70%)`,
+                    }}
+                />
+
+                {/* Coral accent glow — warm contrast */}
+                <div
+                    className="mesh-blob mesh-blob-3"
+                    style={{
+                        background: "radial-gradient(circle, #E8454530 0%, #E8454518 35%, #E845450a 55%, transparent 70%)",
+                    }}
+                />
+
+                {/* Deep plum undertone — richness */}
+                <div
+                    className="mesh-blob mesh-blob-4"
+                    style={{
+                        background: "radial-gradient(circle, #90374940 0%, #90374920 30%, #9037490a 50%, transparent 70%)",
+                    }}
+                />
+
+                {/* Teal whisper — subtle cool accent */}
+                <div
+                    className="mesh-blob mesh-blob-5"
+                    style={{
+                        background: "radial-gradient(circle, #00817020 0%, #00817010 35%, transparent 60%)",
                     }}
                 />
             </div>
+
+            {/* Subtle grain texture for depth (pure CSS) */}
+            <div
+                className="shadow-noise"
+                aria-hidden="true"
+            />
 
             <div className="relative z-10 w-full h-full">
                 {children}
