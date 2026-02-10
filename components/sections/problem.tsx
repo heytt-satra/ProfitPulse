@@ -9,7 +9,7 @@ export function Problem() {
             {/* Removed grain overlay and blur blobs */}
 
             <div className="container relative z-10 mx-auto px-4 md:px-6">
-                <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
+                <div className="flex flex-col lg:flex-row gap-20 lg:gap-16 items-center">
                     {/* Headline */}
                     <div className="flex-1 text-center lg:text-left px-2 lg:pl-16 lg:pr-0">
                         <FadeIn>
@@ -29,7 +29,7 @@ export function Problem() {
                     {/* Display Cards */}
                     <div className="flex-1 flex justify-center lg:justify-end w-full">
                         <FadeIn delay={0.2}>
-                            <div className="relative pt-6 md:pt-10 pr-0 lg:pr-32">
+                            <div className="relative pt-12 md:pt-10 pr-0 lg:pr-32">
                                 <DisplayCards />
                             </div>
                         </FadeIn>
