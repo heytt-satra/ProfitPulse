@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Activity, TrendingUp, Zap, Eye } from "lucide-react";
 import { FadeIn } from "@/components/animations/fade-in";
 import { Logo } from "@/components/ui/logo";
+import { cn } from "@/lib/utils";
 
 /* ─── Dot Grid Decoration ─── */
 function DotGrid() {
