@@ -9,9 +9,9 @@ export function Problem() {
             {/* Removed grain overlay and blur blobs */}
 
             <div className="container relative z-10 mx-auto px-4 md:px-6">
-                <div className="flex flex-col lg:flex-row gap-16 items-center">
+                <div className="flex flex-col lg:flex-row-reverse gap-16 items-center">
                     {/* Headline */}
-                    <div className="flex-1 text-center lg:text-left">
+                    <div className="flex-1 text-center lg:text-left px-4 lg:px-0">
                         <FadeIn>
                             <p className="text-sm font-semibold tracking-widest uppercase text-coral mb-3">The Problem</p>
                             <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 font-heading">
@@ -27,9 +27,9 @@ export function Problem() {
                     </div>
 
                     {/* Display Cards */}
-                    <div className="flex-1 flex justify-center lg:justify-end">
+                    <div className="flex-1 flex justify-center lg:justify-start">
                         <FadeIn delay={0.2}>
-                            <div className="relative pt-10 pr-10">
+                            <div className="relative pt-10 pl-10">
                                 <DisplayCards />
                             </div>
                         </FadeIn>

@@ -1,12 +1,12 @@
 "use client";
 
 import { cloneElement } from "react";
-import { Monitor, Flame, FileQuestion, ArrowRight } from "lucide-react";
+import { Layout, TrendingDown, BarChart3, ArrowRight } from "lucide-react";
 import CardSwap, { Card } from "./card-swap";
 
 const defaultCardsData = [
     {
-        icon: <Monitor className="size-5 text-coral" />,
+        icon: <Layout className="size-5 text-coral" />,
         title: "6 Tabs Open, Still Confused",
         description:
             "Stripe for revenue. Meta Ads for spend. Your bank for everything else. Calculating actual profit requires a PhD in Excel.",
@@ -17,7 +17,7 @@ const defaultCardsData = [
         ],
     },
     {
-        icon: <Flame className="size-5 text-coral" />,
+        icon: <TrendingDown className="size-5 text-coral" />,
         title: "Bleeding Money in Silence",
         description:
             "By the time you spot the problem in your dashboard, you've already burned $2,000 on underperforming ads.",
@@ -28,7 +28,7 @@ const defaultCardsData = [
         ],
     },
     {
-        icon: <FileQuestion className="size-5 text-coral" />,
+        icon: <BarChart3 className="size-5 text-coral" />,
         title: "PDFs You Don't Understand",
         description:
             "Your accountant sends quarterly reports full of jargon. You nod along but have no idea if you're actually making money.",
@@ -47,7 +47,7 @@ export default function DisplayCards() {
                 delay={3000}
                 width={380}
                 height={480}
-                cardDistance={40}
+                cardDistance={-40}
                 verticalDistance={35}
                 skewAmount={0}
                 pauseOnHover={true}
@@ -55,7 +55,7 @@ export default function DisplayCards() {
                 {defaultCardsData.map((card, index) => (
                     <Card
                         key={index}
-                        customClass="rounded-2xl border border-white/[0.08] border-t-[3px] border-t-coral bg-[#111111] p-8 flex flex-col shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]"
+                        customClass="rounded-2xl border border-white/[0.08] border-t-[3px] border-t-coral bg-[#111111] pt-8 pb-8 pr-8 pl-7 flex flex-col shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]"
                     >
                         {/* Icon */}
                         <div className="mb-6">
