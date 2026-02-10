@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export type IntegrationType = "stripe" | "shopify" | "meta" | "google";
@@ -8,87 +9,28 @@ export type IntegrationType = "stripe" | "shopify" | "meta" | "google";
 interface IntegrationLogoProps {
     type: IntegrationType;
     className?: string;
+    size?: number;
 }
 
-export function IntegrationLogo({ type, className }: IntegrationLogoProps) {
-    switch (type) {
-        case "stripe":
-            return (
-                <svg
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={cn("w-6 h-6", className)}
-                >
-                    <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M27.2 14.8C27.2 9.4 23.4 5.8 16.4 5.8C10.6 5.8 6.6 8 6.6 8L7.8 13.8C7.8 13.8 10.8 11.6 15.6 11.6C18.6 11.6 19.8 13 19.8 14.6C19.8 17.6 10.4 16.6 10.4 22.8C10.4 25.4 12.8 27.2 16.2 27.2C21.8 27.2 26 24.6 26 24.6L24.6 19C24.6 19 21.6 21.4 17.2 21.4C14.8 21.4 13.8 20.2 13.8 19C13.8 16.2 27.2 17.2 27.2 14.8Z"
-                        fill="#635BFF"
-                    />
-                </svg>
-            );
-        case "shopify":
-            return (
-                <svg
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={cn("w-6 h-6", className)}
-                >
-                    <path
-                        d="M27.6 10L23.4 2.8C23 2.2 22.4 2 21.8 2.2L16 3.6L10.2 2.2C9.6 2 9 2.2 8.6 2.8L4.4 10C2.4 16.6 3.2 20 4.2 22.8L16 29.6L27.8 22.8C28.8 20 29.6 16.6 27.6 10ZM11.6 7L16 21.2L20.4 7L24.4 8.6L21.4 20.2L16 29.6L10.6 20.2L7.6 8.6L11.6 7Z"
-                        fill="#95BF47"
-                    />
-                </svg>
-            );
-        case "meta":
-            return (
-                <svg
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={cn("w-6 h-6", className)}
-                >
-                    <path
-                        d="M29.8 16.6C26.8 16.6 25.2 14.2 23.8 11.8C22.2 9 20 5.4 16 5.4C11.6 5.4 8 9 8 16C8 23 11.6 26.6 16 26.6C20 26.6 22.2 23 23.8 20.2C25.2 17.8 26.8 15.4 29.8 15.4C31.2 15.4 32 16.4 32 16C32 15.6 31.2 16.6 29.8 16.6ZM8 24.6C4.8 24.6 2.2 21.4 2.2 16C2.2 10.6 4.8 7.4 8 7.4C10.6 7.4 12.8 9 14.2 11.4C15.4 13.4 16.6 16 16.6 16L16 16C16.6 16 15.4 18.6 14.2 20.6C12.8 23 10.6 24.6 8 24.6Z"
-                        fill="#0668E1"
-                    />
-                    <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M29.9324 8.44855C26.9804 8.28315 24.7171 10.4285 22.8722 13.5828C22.2514 14.6441 21.6558 15.7441 21.0772 16.8123L16 26.1848C19.3496 27.6015 23.3686 25.228 25.4379 21.6917C26.7904 19.3797 27.9946 17.6534 29.9324 17.762C31.5457 17.8523 32.1485 19.3374 31.9772 19.8517C31.4344 21.4744 30.1372 23.0177 28.5372 23.4748C28.2572 23.5548 28.32 23.9891 28.6058 23.9891C30.6515 23.9891 32.1601 22.4291 32.6172 20.3091C32.9601 18.7205 32.4058 16.9205 30.7944 16.092C29.2858 15.3148 27.5344 15.8691 26.1629 17.4063L26.3172 17.1548C24.8144 14.3948 22.8486 11.1434 19.74 11.1434C19.7058 11.1434 19.6715 11.1434 19.6372 11.1491C16.8944 11.5034 14.7172 14.0063 12.8715 17.1605C12.2507 18.2219 11.6551 19.3219 11.0765 20.3902L9.62007 23.0789L8.24294 25.621C4.89332 24.2043 0.874316 26.5778 -1.19498 30.1141C-2.54751 32.4261 -3.75168 34.1524 -5.68947 34.0438C-7.30278 33.9535 -7.9056 32.4684 -7.73428 31.9542C-7.19146 30.3314 -5.89431 28.7881 -4.29427 28.331C-4.01426 28.251 -4.07709 27.8167 -4.36283 27.8167C-6.40854 27.8167 -7.91711 29.3767 -8.37424 31.4967C-8.7171 33.0853 -8.16281 34.8853 -6.55139 35.7138C-5.04283 36.491 -3.29139 35.9367 -1.91997 34.3995L-2.0743 34.651C-0.571473 37.411 1.39423 40.6624 4.50284 40.6624C4.53713 40.6624 4.57141 40.6624 4.6057 40.6567C7.34855 40.3024 9.52573 37.7995 11.3714 34.6453C11.9922 33.5839 12.5879 32.4839 13.1664 31.4156L16 26.1848L18.8337 20.954C20.4851 17.9054 22.428 14.7797 25.268 14.4254C25.3023 14.4254 25.3366 14.4197 25.3709 14.4197C27.5651 14.4197 29.1366 15.4254 30.2909 17.0654L30.1366 16.8083C30.9594 15.3568 31.3251 13.6825 31.1309 12.0197C30.9366 10.3568 30.1766 8.84255 29.9324 8.44855Z"
-                        fill="#0668E1"
-                    />
-                </svg>
-            );
-        case "google":
-            return (
-                <svg
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={cn("w-6 h-6", className)}
-                >
-                    <path
-                        d="M20.2 3.8L9.8 21.8L15 30.8L28.8 6.8C27.2 4.6 24.2 3.4 20.2 3.8Z"
-                        fill="#4285F4"
-                    />
-                    <path
-                        d="M28.8 6.8L15 30.8L19.4 30.8L29.6 13C30.4 10.8 30.2 8.6 28.8 6.8Z"
-                        fill="#1967D2" // Darker blue edge
-                    />
-                    <path
-                        d="M9.8 21.8C5.8 20.2 3.8 16.2 4.6 12C5.4 7.8 8.8 4.6 13 3.4L20.2 3.8L9.8 21.8Z"
-                        fill="#F4B400"
-                    />
-                    <path
-                        d="M9.8 21.8L15 30.8C11.4 31.2 8.2 29.8 6.2 27.2C4.2 24.6 3.6 21 4.6 18L9.8 21.8Z"
-                        fill="#0F9D58"
-                    />
-                </svg>
-            );
-        default:
-            return null;
-    }
+const logoConfig: Record<IntegrationType, { src: string; alt: string }> = {
+    stripe: { src: "/logos/stripe.svg", alt: "Stripe" },
+    shopify: { src: "/logos/shopify.svg", alt: "Shopify" },
+    meta: { src: "/logos/meta.svg", alt: "Meta" },
+    google: { src: "/logos/google-ads.svg", alt: "Google Ads" },
+};
+
+export function IntegrationLogo({ type, className, size = 22 }: IntegrationLogoProps) {
+    const config = logoConfig[type];
+    if (!config) return null;
+
+    return (
+        <Image
+            src={config.src}
+            alt={config.alt}
+            width={size}
+            height={size}
+            className={cn("object-contain", className)}
+            unoptimized
+        />
+    );
 }
