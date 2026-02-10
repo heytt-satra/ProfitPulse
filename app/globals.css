@@ -60,6 +60,25 @@ body {
   box-shadow: 0 0 20px rgba(0, 129, 112, 0.3), 0 0 60px rgba(0, 129, 112, 0.1);
 }
 
+/* ─── Card Swap Component ─── */
+.card-swap-container {
+  position: relative;
+  /* Perspective gives depth to the Z transforms */
+  perspective: 1000px;
+  /* Ensure stack up doesn't get clipped (unless parent clips it) */
+  overflow: visible;
+}
+
+.gsap-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* GSAP handles the translate(-50%, -50%) via xPercent/yPercent */
+  will-change: transform, opacity;
+  /* Ensure backface visibility for 3D effects */
+  backface-visibility: hidden;
+}
+
 /* ─── Performance: reduce motion for users who prefer it ─── */
 @media (prefers-reduced-motion: reduce) {
 
@@ -71,7 +90,3 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
-
-
-
-/* GPU-only keyframes: transform only = zero layout/paint cost */

@@ -12,24 +12,40 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ customClass, ...res
 ));
 Card.displayName = 'Card';
 
-const makeSlot = (i: number, distX: number, distY: number, total: number) => ({
-    x: i * distX,
-    y: -i * distY,
-    z: -i * distX * 1.5,
-    zIndex: total - i
-});
+// Scale and Opacity decay factors
+const SCALE_DECAY = 0.05; // 5% shrinkage per card
+const OPACITY_DECAY = 0.15; // 15% opacity drop (brighter background cards)
+
+const makeSlot = (i: number, distX: number, distY: number, total: number) => {
+    // Determine visual index (0 = front, 1 = second, etc.)
+    // i is the index in the current rotated order, so i=0 is front
+    const scale = 1 - i * SCALE_DECAY;
+    const opacity = i === 0 ? 1 : Math.max(0.1, 1 - i * OPACITY_DECAY);
+
+    return {
+        x: i * distX,
+        y: i * distY, // Positive integer moves DOWN, matching the "Stack Down" direction
+        z: 0, // Disable Z-translation to prevent double-scaling (use explicit scale prop instead)
+        scale,
+        opacity,
+        zIndex: total - i
+    };
+};
 
 const placeNow = (el: HTMLElement, slot: any, skew: number) =>
     gsap.set(el, {
         x: slot.x,
         y: slot.y,
         z: slot.z,
+        scale: slot.scale,
+        opacity: slot.opacity,
         xPercent: -50,
         yPercent: -50,
         skewY: skew,
         transformOrigin: 'center center',
         zIndex: slot.zIndex,
-        force3D: true
+        force3D: true,
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' // Shadow on ALL cards for depth
     });
 
 interface CardSwapProps {
@@ -122,6 +138,8 @@ const CardSwap = ({
                     x: slot.x,
                     y: slot.y,
                     z: slot.z,
+                    scale: slot.scale,
+                    opacity: slot.opacity,
                     duration: config.durMove,
                     ease: config.ease
                 },
@@ -144,6 +162,8 @@ const CardSwap = ({
                 x: backSlot.x,
                 y: backSlot.y,
                 z: backSlot.z,
+                scale: backSlot.scale,
+                opacity: backSlot.opacity,
                 duration: config.durReturn,
                 ease: config.ease
             },
