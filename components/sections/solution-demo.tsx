@@ -136,7 +136,7 @@ function ChatQuestionCard() {
                             {[0, 1, 2].map((i) => (
                                 <div
                                     key={i}
-                                    className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce"
+                                    className="w-1.5 h-1.5 bg-white/30 rounded-full"
                                     style={{
                                         animationDelay: `${i * 200}ms`,
                                     }}

@@ -86,7 +86,7 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
             <div className={cn(
                 "hidden md:flex fixed inset-x-0 mx-auto z-50 items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
                 isScrolled ? "top-4 w-[60%] max-w-2xl px-5 py-2.5 bg-black/60 shadow-black/40" : "top-6 w-[95%] max-w-5xl px-6 py-3 bg-black/40 shadow-black/20",
-                "backdrop-blur-lg border border-white/10 rounded-full shadow-2xl",
+                "bg-dark/95 border border-white/10 rounded-full shadow-2xl",
                 className
             )}>
                 {/* Logo */}
@@ -143,7 +143,7 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
             </div>
 
             {/* Mobile Top Bar */}
-            <div className="md:hidden fixed top-0 inset-x-0 z-50 flex items-center justify-between px-4 py-3 bg-black/70 backdrop-blur-xl border-b border-white/10">
+            <div className="md:hidden fixed top-0 inset-x-0 z-50 flex items-center justify-between px-4 py-3 bg-black/95 border-b border-white/10">
                 <Link href="/" className="flex items-center">
                     <Logo className="scale-90 origin-left" />
                 </Link>
@@ -164,7 +164,7 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="md:hidden fixed inset-0 z-40 bg-black/90 backdrop-blur-xl"
+                        className="md:hidden fixed inset-0 z-40 bg-black/95"
                     >
                         <motion.nav
                             initial={{ opacity: 0, y: -20 }}

@@ -55,7 +55,7 @@ function IntegrationPill({
             {/* Glow on hover */}
             <div className="absolute -inset-px rounded-2xl bg-coral/0 group-hover:bg-coral/20 blur-xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
 
-            <div className="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl p-5 flex items-center gap-4 transition-all duration-300 group-hover:border-coral/30 group-hover:bg-white/[0.07]">
+            <div className="relative bg-white/[0.04] border border-white/10 rounded-2xl p-5 flex items-center gap-4 transition-all duration-300 group-hover:border-coral/30 group-hover:bg-white/[0.07]">
                 {/* Icon */}
                 <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-coral/25 transition-colors duration-300">
                     <IntegrationLogo
@@ -74,7 +74,7 @@ function IntegrationPill({
 
                 {/* Connected indicator */}
                 <div className="ml-auto flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-teal" />
                     <span className="text-teal text-[10px] font-medium uppercase tracking-wider">
                         Live
                     </span>
@@ -108,7 +108,7 @@ export function SocialProof() {
                             {/* Subtle card glow */}
                             <div className="absolute -inset-1 bg-gradient-to-br from-coral/10 via-transparent to-teal/10 rounded-3xl blur-xl opacity-60" />
 
-                            <div className="relative bg-indigo/60 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10">
+                            <div className="relative bg-indigo/80 border border-white/10 rounded-3xl p-8 md:p-10">
                                 {/* Quote mark decoration */}
                                 <div className="absolute top-6 left-6 md:top-8 md:left-8">
                                     <div className="w-10 h-10 rounded-full bg-coral/10 flex items-center justify-center">

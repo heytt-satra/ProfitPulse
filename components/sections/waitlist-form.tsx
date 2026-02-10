@@ -88,7 +88,7 @@ export function WaitlistForm() {
                         {/* Decorative background glow */}
                         <div className="absolute -inset-1 bg-linear-to-br from-coral/20 via-transparent to-teal/10 rounded-4xl blur-2xl opacity-50" />
 
-                        <div className="relative bg-indigo/40 backdrop-blur-xl p-8 md:p-12 rounded-4xl border border-white/10 shadow-2xl">
+                        <div className="relative bg-indigo/60 p-8 md:p-12 rounded-4xl border border-white/10 shadow-2xl">
                             <AnimatePresence mode="wait">
                                 {isSubmitted ? (
                                     <motion.div

@@ -86,7 +86,7 @@ function DashboardPreview() {
                 </div>
 
                 {/* Main Content Area */}
-                <div className="flex-1 flex flex-col bg-dark/80 backdrop-blur-sm relative">
+                <div className="flex-1 flex flex-col bg-dark/90 relative">
                     {/* Top Bar */}
                     <div className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-indigo/10">
                         <div className="flex items-center gap-3 text-white/50 text-sm">
@@ -144,7 +144,7 @@ function DashboardPreview() {
 
                         {messages.length < 3 && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1.5 ml-2 pt-2">
-                                {[0, 1, 2].map((i) => (<div key={i} className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />))}
+                                {[0, 1, 2].map((i) => (<div key={i} className="w-1.5 h-1.5 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: `${i * 200}ms`, animationDuration: '1.5s' }} />))}
                             </motion.div>
                         )}
                     </div>
@@ -241,7 +241,7 @@ export function Hero() {
                     {/* New Dashboard Hero Visual */}
                     <FadeIn delay={0.4} className="relative mx-auto w-full max-w-6xl px-2 sm:px-4">
                         {/* Glow effect */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[500px] bg-indigo/20 rounded-full blur-[120px] -z-10 pointer-events-none" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[400px] bg-indigo/15 rounded-full -z-10 pointer-events-none" style={{ filter: 'blur(80px)' }} />
 
                         {/* Dashboard Mockup */}
                         <DashboardPreview />
