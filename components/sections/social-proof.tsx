@@ -15,13 +15,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Logo } from "@/components/ui/logo";
+import { IntegrationLogo, IntegrationType } from "@/components/ui/integration-logo";
 
-const integrations = [
-    { name: "Stripe", desc: "Payments" },
-    { name: "Shopify", desc: "E-commerce" },
-    { name: "Meta Ads", desc: "Advertising" },
-    { name: "Google Ads", desc: "Advertising" },
+const integrations: { name: string; type: IntegrationType; desc: string }[] = [
+    { name: "Stripe", type: "stripe", desc: "Payments" },
+    { name: "Shopify", type: "shopify", desc: "E-commerce" },
+    { name: "Meta Ads", type: "meta", desc: "Advertising" },
+    { name: "Google Ads", type: "google", desc: "Advertising" },
 ];
 
 const stats = [
@@ -57,8 +57,11 @@ function IntegrationPill({
 
             <div className="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl p-5 flex items-center gap-4 transition-all duration-300 group-hover:border-coral/30 group-hover:bg-white/[0.07]">
                 {/* Icon */}
-                <div className="shrink-0 flex items-center justify-center">
-                    <Logo iconOnly className="scale-[0.8]" />
+                <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-coral/25 transition-colors duration-300">
+                    <IntegrationLogo
+                        type={integration.type}
+                        className="text-white group-hover:text-white transition-colors"
+                    />
                 </div>
 
                 {/* Text */}
