@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/animations/fade-in";
 import { ArrowRight, Sparkles, TrendingDown, Lightbulb, Menu, X, ChevronDown, LayoutDashboard, MessageSquare, PieChart, Settings, Search, Bell, User } from "lucide-react";
 import { ShadowOverlay } from "@/components/ui/shadow-overlay";
+import { Logo } from "@/components/ui/logo";
 
 // --- Dashboard Component (New) ---
 function DashboardPreview() {
@@ -41,11 +42,9 @@ function DashboardPreview() {
                 {/* Sidebar */}
                 <div className="w-16 md:w-64 border-r border-white/5 bg-indigo/30 flex flex-col hidden md:flex">
                     <div className="p-4 border-b border-white/5 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-coral to-wine flex items-center justify-center shrink-0">
-                            <span className="font-bold text-white text-xs">P</span>
-                        </div>
+                        <Logo iconOnly className="scale-75" />
                         <div className="hidden md:block">
-                            <div className="text-sm font-bold text-white">ProfitPulse</div>
+                            <div className="text-sm font-bold text-white uppercase tracking-tight">ProfitPulse</div>
                             <div className="text-[10px] text-white/40">v2.0.4</div>
                         </div>
                     </div>
@@ -80,7 +79,7 @@ function DashboardPreview() {
 
                 {/* Mobile Sidebar Icon Only (simulated for simpler code, or just hide sidebar on mobile and show full chat) */}
                 <div className="w-14 border-r border-white/5 bg-indigo/30 flex flex-col items-center py-4 gap-6 md:hidden">
-                    <div className="w-8 h-8 rounded-lg bg-linear-to-br from-coral to-wine flex items-center justify-center shrink-0 text-white font-bold text-xs">P</div>
+                    <Logo iconOnly className="scale-50" />
                     <MessageSquare size={20} className="text-coral" />
                     <LayoutDashboard size={20} className="text-white/40" />
                     <PieChart size={20} className="text-white/40" />

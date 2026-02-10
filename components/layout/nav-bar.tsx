@@ -6,6 +6,7 @@ import Link from "next/link"
 import { LucideIcon, Home, Sparkles, Zap, CreditCard, UserPlus, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
 
 interface NavItem {
     name: string
@@ -68,10 +69,7 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
             )}>
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 group">
-                    <div className={cn("bg-coral rounded-full transition-all duration-300", isScrolled ? "p-1" : "p-1.5")}>
-                        <Sparkles className={cn("text-white fill-white transition-all duration-300", isScrolled ? "w-3.5 h-3.5" : "w-4 h-4")} />
-                    </div>
-                    <span className={cn("font-bold tracking-tight text-white font-heading transition-all duration-300", isScrolled ? "text-base" : "text-lg")}>ProfitPulse</span>
+                    <Logo />
                 </Link>
 
                 {/* Nav Links */}
