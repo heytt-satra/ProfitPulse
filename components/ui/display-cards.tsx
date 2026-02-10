@@ -42,11 +42,11 @@ const defaultCardsData = [
 
 export default function DisplayCards() {
     return (
-        <div className="relative w-full h-[420px] md:h-[500px] flex items-center justify-center">
+        <div className="relative w-full h-[480px] md:h-[550px] flex items-center justify-center">
             <CardSwap
                 delay={3000}
                 width="min(340px, 85vw)"
-                height="min(420px, 75vh)"
+                height="min(460px, 80vh)"
                 cardDistance={30}
                 verticalDistance={28}
                 skewAmount={0}
@@ -77,7 +77,7 @@ export default function DisplayCards() {
                         </p>
 
                         {/* Bullet list */}
-                        <ul className="space-y-2 md:space-y-2.5 mb-6 md:mb-8">
+                        <ul className="space-y-2 md:space-y-2.5 mb-4 md:mb-5">
                             {card.bullets.map((bullet, bi) => (
                                 <li
                                     key={bi}
