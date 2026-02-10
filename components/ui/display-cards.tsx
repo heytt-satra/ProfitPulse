@@ -9,7 +9,7 @@ const defaultCardsData = [
         icon: <Layout className="size-5 text-coral" />,
         title: "6 Tabs Open, Still Confused",
         description:
-            "Stripe for revenue. Meta Ads for spend. Your bank for everything else. Calculating actual profit requires a PhD in Excel.",
+            "Stripe for revenue. Meta Ads for spend. Your bank for everything else. True profit requires a PhD in Excel.",
         bullets: [
             "Avg. founder spends 4 hours/week reconciling",
             "Multiple disconnected dashboards",
@@ -20,7 +20,7 @@ const defaultCardsData = [
         icon: <TrendingDown className="size-5 text-coral" />,
         title: "Bleeding Money in Silence",
         description:
-            "By the time you spot the problem in your dashboard, you've already burned $2,000 on underperforming ads.",
+            "By the time you spot the problem, you've already burned $2,000. Ad spend leaks go unnoticed for weeks.",
         bullets: [
             "73% of SMEs don't track daily profitability",
             "Ad spend leaks go unnoticed for weeks",
