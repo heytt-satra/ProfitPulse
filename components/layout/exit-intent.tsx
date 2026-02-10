@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, FileSpreadsheet, Sparkles } from "lucide-react";
+import { X, FileSpreadsheet } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 
 export function ExitIntentPopup() {
@@ -62,7 +63,7 @@ export function ExitIntentPopup() {
                                     required
                                 />
                                 <Button variant="mint" type="submit" className="w-full">
-                                    <Sparkles size={16} className="mr-2" />Send Me the Template
+                                    <Logo iconOnly className="scale-[0.4] mr-2" />Send Me the Template
                                 </Button>
                             </form>
                             <p className="mt-4 text-xs text-white/30">No spam. Unsubscribe anytime.</p>

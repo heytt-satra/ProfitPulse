@@ -292,7 +292,7 @@ function TimelineStep({
         <div className="relative">
             {/* ── Connecting line (not on last step) ── */}
             {!isLast && (
-                <div className="absolute left-1/2 -translate-x-1/2 top-12 bottom-0 w-px bg-gradient-to-b from-coral/30 via-white/10 to-transparent hidden md:block" />
+                <div className="absolute left-1/2 -translate-x-1/2 top-12 bottom-0 w-px bg-linear-to-b from-coral/30 via-white/10 to-transparent hidden md:block" />
             )}
 
             <motion.div
@@ -451,7 +451,7 @@ function TimelineStep({
                     </motion.div>
                     {/* Connector line */}
                     {!isLast && (
-                        <div className="w-px h-12 bg-gradient-to-b from-coral/30 to-transparent" />
+                        <div className="w-px h-12 bg-linear-to-b from-coral/30 to-transparent" />
                     )}
                 </div>
             </motion.div>

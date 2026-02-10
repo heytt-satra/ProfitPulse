@@ -59,7 +59,7 @@ export default function DisplayCards() {
                     >
                         {/* Icon */}
                         <div className="mb-6">
-                            <span className="inline-flex items-center justify-center size-14 rounded-2xl bg-[#1a1a1a] ring-1 ring-white/[0.06]">
+                            <span className="inline-flex items-center justify-center size-14 rounded-2xl bg-[#1a1a1a] ring-1 ring-white/6">
                                 {cloneElement(card.icon as any, {
                                     className: "size-6 text-coral",
                                 })}

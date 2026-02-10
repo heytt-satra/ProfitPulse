@@ -9,6 +9,7 @@ import { CheckCircle2, AlertCircle, Lock, Sparkles, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FadeIn } from "@/components/animations/fade-in";
+import { Logo } from "@/components/ui/logo";
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email address"),
@@ -70,7 +71,7 @@ export function WaitlistForm() {
             <div className="max-w-2xl mx-auto relative z-10 px-4 md:px-6">
                 <FadeIn className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral/10 border border-coral/20 text-coral text-[10px] font-bold uppercase tracking-wider mb-4">
-                        <Sparkles size={12} />
+                        <Logo iconOnly className="scale-[0.3]" />
                         Early Access
                     </div>
                     <h2 className="text-3xl md:text-5xl font-bold font-heading mb-4 text-white">
@@ -85,9 +86,9 @@ export function WaitlistForm() {
                 <FadeIn delay={0.2}>
                     <div className="relative">
                         {/* Decorative background glow */}
-                        <div className="absolute -inset-1 bg-gradient-to-br from-coral/20 via-transparent to-teal/10 rounded-[2.5rem] blur-2xl opacity-50" />
+                        <div className="absolute -inset-1 bg-linear-to-br from-coral/20 via-transparent to-teal/10 rounded-4xl blur-2xl opacity-50" />
 
-                        <div className="relative bg-indigo/40 backdrop-blur-xl p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-2xl">
+                        <div className="relative bg-indigo/40 backdrop-blur-xl p-8 md:p-12 rounded-4xl border border-white/10 shadow-2xl">
                             <AnimatePresence mode="wait">
                                 {isSubmitted ? (
                                     <motion.div
@@ -222,7 +223,7 @@ export function WaitlistForm() {
                                             </p>
                                             <div className="w-1 h-1 rounded-full bg-white/10" />
                                             <p className="text-[10px] text-white/20 flex items-center gap-1.5 uppercase tracking-tighter font-bold">
-                                                <Sparkles size={10} className="text-coral/40" />
+                                                <Logo iconOnly className="scale-[0.25] opacity-40" />
                                                 Early Access Invite
                                             </p>
                                         </div>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Activity, TrendingUp, Zap, Eye } from "lucide-react";
 import { FadeIn } from "@/components/animations/fade-in";
+import { Logo } from "@/components/ui/logo";
 
 /* ─── Dot Grid Decoration ─── */
 function DotGrid() {
@@ -62,10 +63,16 @@ function GlassBubble({
 
                 {/* Content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                    <div className={`${iconSize} rounded-lg bg-coral flex items-center justify-center mb-3 shadow-lg shadow-coral/25`}>
-                        <Icon size={size === "lg" ? 20 : 16} className="text-white" strokeWidth={2.5} />
+                    <div className={cn(iconSize, "rounded-lg flex items-center justify-center mb-1 shrink-0")}>
+                        {label === "ProfitPulse" ? (
+                            <Logo iconOnly className="scale-125" />
+                        ) : (
+                            <div className="bg-coral p-2 rounded-lg shadow-lg shadow-coral/25">
+                                <Icon size={size === "lg" ? 20 : 16} className="text-white" strokeWidth={2.5} />
+                            </div>
+                        )}
                     </div>
-                    <h4 className={`text-white font-bold ${textSize} font-heading leading-tight`}>{label}</h4>
+                    <h4 className={`text-white font-bold ${textSize} font-heading leading-tight mt-1`}>{label}</h4>
                     <p className="text-white/40 text-xs italic mt-1">{subLabel}</p>
                 </div>
             </div>
