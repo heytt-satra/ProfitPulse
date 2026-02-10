@@ -42,11 +42,11 @@ const defaultCardsData = [
 
 export default function DisplayCards() {
     return (
-        <div className="relative w-full h-[480px] md:h-[600px] flex items-end justify-center pb-12 md:pb-20">
+        <div className="relative w-full h-[520px] md:h-[600px] flex items-end justify-center pb-8 md:pb-20">
             <CardSwap
                 delay={3000}
-                width="min(340px, 85vw)"
-                height="min(460px, 80vh)"
+                width="min(300px, 85vw)"
+                height="min(420px, 75vh)"
                 verticalDistance={-60}
                 cardDistance={20}
                 skewAmount={0}
