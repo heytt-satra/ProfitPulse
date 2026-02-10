@@ -136,17 +136,17 @@ export function Pricing({
     };
 
     return (
-        <section id="pricing" className="container py-20 relative">
-            <div className="text-center space-y-4 mb-12 relative z-10">
-                <h2 className="text-4xl font-bold tracking-tight sm:text-5xl font-heading text-white">
+        <section id="pricing" className="container py-16 md:py-20 relative px-4 md:px-6">
+            <div className="text-center space-y-4 mb-10 md:mb-12 relative z-10">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight sm:text-5xl font-heading text-white">
                     {title}
                 </h2>
-                <p className="text-white/60 text-lg whitespace-pre-line max-w-2xl mx-auto">
+                <p className="text-white/60 text-base md:text-lg whitespace-pre-line max-w-2xl mx-auto">
                     {description}
                 </p>
             </div>
 
-            <div className="flex justify-center mb-10 relative z-10">
+            <div className="flex justify-center mb-8 md:mb-10 relative z-10">
                 <label className="relative inline-flex items-center cursor-pointer">
                     <Label>
                         <Switch
@@ -157,12 +157,12 @@ export function Pricing({
                         />
                     </Label>
                 </label>
-                <span className="ml-2 font-semibold text-white">
+                <span className="ml-2 font-semibold text-white text-sm md:text-base">
                     Annual billing <span className="text-teal">(Save 20%)</span>
                 </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 sm:2 gap-6 relative z-10 lg:items-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 relative z-10 lg:items-center max-w-sm md:max-w-none mx-auto">
                 {plans.map((plan, index) => (
                     <motion.div
                         key={index}
@@ -187,7 +187,7 @@ export function Pricing({
                             opacity: { duration: 0.5 },
                         }}
                         className={cn(
-                            `rounded-2xl border-[1px] p-6 text-center lg:flex lg:flex-col lg:justify-center relative backdrop-blur-md`,
+                            `rounded-2xl border-[1px] p-5 md:p-6 text-center lg:flex lg:flex-col lg:justify-center relative backdrop-blur-md`,
                             plan.isPopular ? "border-coral border-2 bg-indigo/50 shadow-2xl shadow-coral/10 z-20" : "border-white/10 bg-white/[0.03] z-10 hover:border-white/20 transition-colors",
                             "flex flex-col h-full",
                             !plan.isPopular && "mt-0 lg:mt-5",
@@ -205,15 +205,15 @@ export function Pricing({
                             <p className={cn("text-base font-semibold", plan.isPopular ? "text-coral" : "text-white/60")}>
                                 {plan.name}
                             </p>
-                            <div className="mt-6 flex items-center justify-center gap-x-1">
-                                <span className="text-5xl font-bold tracking-tight text-white flex items-start justify-center">
-                                    <span className="text-3xl mt-1">$</span>
+                            <div className="mt-4 md:mt-6 flex items-center justify-center gap-x-1">
+                                <span className="text-4xl md:text-5xl font-bold tracking-tight text-white flex items-start justify-center">
+                                    <span className="text-2xl md:text-3xl mt-1">$</span>
                                     <NumberFlow
                                         value={
                                             isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)
                                         }
                                         format={{
-                                            style: "decimal", // Currency handled manually for alignment
+                                            style: "decimal",
                                             minimumFractionDigits: 0,
                                             maximumFractionDigits: 0,
                                         }}
@@ -226,7 +226,7 @@ export function Pricing({
                                     />
                                 </span>
                                 {plan.period !== "Next 3 months" && (
-                                    <span className="text-sm font-semibold leading-6 tracking-wide text-white/40 self-end mb-2">
+                                    <span className="text-xs md:text-sm font-semibold leading-6 tracking-wide text-white/40 self-end mb-1.5 md:mb-2">
                                         / {plan.period}
                                     </span>
                                 )}
@@ -236,11 +236,11 @@ export function Pricing({
                                 {isMonthly ? "billed monthly" : "billed annually"}
                             </p>
 
-                            <hr className={cn("w-full my-6", plan.isPopular ? "border-white/10" : "border-white/5")} />
+                            <hr className={cn("w-full my-4 md:my-6", plan.isPopular ? "border-white/10" : "border-white/5")} />
 
-                            <ul className="gap-3 flex flex-col text-left mb-8 flex-1">
+                            <ul className="gap-2.5 md:gap-3 flex flex-col text-left mb-6 md:mb-8 flex-1">
                                 {plan.features.map((feature, idx) => (
-                                    <li key={idx} className="flex items-start gap-3">
+                                    <li key={idx} className="flex items-start gap-2.5 md:gap-3">
                                         <div className={cn("h-5 w-5 rounded-full flex items-center justify-center shrink-0", plan.isPopular ? "bg-coral/20 text-coral" : "bg-white/10 text-white/60")}>
                                             <Check className="h-3 w-3" />
                                         </div>
@@ -256,7 +256,7 @@ export function Pricing({
                                     document.getElementById("waitlist_form")?.scrollIntoView({ behavior: "smooth" });
                                 }}
                                 className={cn(
-                                    "inline-flex items-center justify-center font-semibold transition-all duration-300 active:scale-[0.97] h-12 px-6 text-base rounded-xl group relative w-full gap-2 overflow-hidden tracking-wide",
+                                    "inline-flex items-center justify-center font-semibold transition-all duration-300 active:scale-[0.97] h-11 md:h-12 px-5 md:px-6 text-sm md:text-base rounded-xl group relative w-full gap-2 overflow-hidden tracking-wide",
                                     plan.isPopular
                                         ? "bg-coral hover:bg-coral/90 text-white shadow-lg shadow-coral/25 border-none"
                                         : "border-2 border-white/10 bg-transparent text-white hover:bg-white/5 hover:text-white hover:border-white/20"
@@ -264,7 +264,7 @@ export function Pricing({
                             >
                                 {plan.buttonText}
                             </Link>
-                            <p className="mt-4 text-xs leading-5 text-white/30">
+                            <p className="mt-3 md:mt-4 text-xs leading-5 text-white/30">
                                 {plan.description}
                             </p>
                         </div>

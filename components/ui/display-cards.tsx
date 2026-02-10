@@ -42,48 +42,48 @@ const defaultCardsData = [
 
 export default function DisplayCards() {
     return (
-        <div className="relative w-full h-[500px] flex items-center justify-center">
+        <div className="relative w-full h-[420px] md:h-[500px] flex items-center justify-center">
             <CardSwap
                 delay={3000}
-                width={380}
-                height={480}
-                cardDistance={-40}
-                verticalDistance={35}
+                width="min(340px, 85vw)"
+                height="min(420px, 75vh)"
+                cardDistance={30}
+                verticalDistance={28}
                 skewAmount={0}
                 pauseOnHover={true}
             >
                 {defaultCardsData.map((card, index) => (
                     <Card
                         key={index}
-                        customClass="rounded-2xl border border-white/[0.08] border-t-[3px] border-t-coral bg-[#111111] pt-8 pb-8 pr-8 pl-7 flex flex-col shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]"
+                        customClass="rounded-2xl border border-white/[0.08] border-t-[3px] border-t-coral bg-[#111111] p-5 md:p-8 flex flex-col shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]"
                     >
                         {/* Icon */}
-                        <div className="mb-6">
-                            <span className="inline-flex items-center justify-center size-14 rounded-2xl bg-[#1a1a1a] ring-1 ring-white/6">
+                        <div className="mb-4 md:mb-6">
+                            <span className="inline-flex items-center justify-center size-11 md:size-14 rounded-2xl bg-[#1a1a1a] ring-1 ring-white/6">
                                 {cloneElement(card.icon as any, {
-                                    className: "size-6 text-coral",
+                                    className: "size-5 md:size-6 text-coral",
                                 })}
                             </span>
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-[22px] font-extrabold text-white mb-3 leading-tight tracking-tight">
+                        <h3 className="text-lg md:text-[22px] font-extrabold text-white mb-2 md:mb-3 leading-tight tracking-tight">
                             {card.title}
                         </h3>
 
                         {/* Description */}
-                        <p className="text-[14px] text-[#888] leading-relaxed mb-6">
+                        <p className="text-[13px] md:text-[14px] text-[#888] leading-relaxed mb-4 md:mb-6">
                             {card.description}
                         </p>
 
                         {/* Bullet list */}
-                        <ul className="space-y-2.5 mb-8">
+                        <ul className="space-y-2 md:space-y-2.5 mb-6 md:mb-8">
                             {card.bullets.map((bullet, bi) => (
                                 <li
                                     key={bi}
-                                    className="flex items-start gap-2.5 text-[13px] text-white/80 font-medium"
+                                    className="flex items-start gap-2 md:gap-2.5 text-[12px] md:text-[13px] text-white/80 font-medium"
                                 >
-                                    <span className="size-[6px] rounded-full bg-coral mt-[6px] shrink-0" />
+                                    <span className="size-[5px] md:size-[6px] rounded-full bg-coral mt-[6px] shrink-0" />
                                     {bullet}
                                 </li>
                             ))}

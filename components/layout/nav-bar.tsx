@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { LucideIcon, Home, Sparkles, Zap, CreditCard, UserPlus, ArrowRight } from "lucide-react"
+import { LucideIcon, Home, Sparkles, Zap, CreditCard, UserPlus, ArrowRight, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/ui/logo"
@@ -31,6 +31,7 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
     const [activeTab, setActiveTab] = useState(items[0]?.name || "")
     const [isMobile, setIsMobile] = useState(false)
     const [isScrolled, setIsScrolled] = useState(false)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     useEffect(() => {
         const handleResize = () => {
@@ -51,7 +52,18 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
         }
     }, [])
 
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = "hidden"
+        } else {
+            document.body.style.overflow = ""
+        }
+        return () => { document.body.style.overflow = "" }
+    }, [mobileMenuOpen])
+
     const handleScrollTo = (url: string) => {
+        setMobileMenuOpen(false)
         const element = document.querySelector(url);
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });
@@ -120,37 +132,88 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
                 </Button>
             </div>
 
-            {/* Mobile Navigation (Bottom Pill) */}
-            <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-                <div className="flex items-center gap-3 bg-black/60 border border-white/10 backdrop-blur-xl py-2 px-2 rounded-full shadow-2xl shadow-black/40">
-                    {items.map((item) => {
-                        const Icon = item.icon
-                        const isActive = activeTab === item.name
-
-                        return (
-                            <Link
-                                key={item.name}
-                                href={item.url}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setActiveTab(item.name);
-                                    handleScrollTo(item.url);
-                                }}
-                                className={cn(
-                                    "relative p-3 rounded-full transition-all duration-300",
-                                    "text-white/60 hover:text-coral",
-                                    isActive && "bg-white/10 text-coral shadow-inner shadow-white/5",
-                                )}
-                            >
-                                <Icon size={20} strokeWidth={2.5} />
-                                {isActive && (
-                                    <span className="absolute -top-1 right-1 w-2 h-2 bg-coral rounded-full animate-pulse" />
-                                )}
-                            </Link>
-                        )
-                    })}
-                </div>
+            {/* Mobile Top Bar */}
+            <div className="md:hidden fixed top-0 inset-x-0 z-50 flex items-center justify-between px-4 py-3 bg-black/70 backdrop-blur-xl border-b border-white/10">
+                <Link href="/" className="flex items-center">
+                    <Logo className="scale-90 origin-left" />
+                </Link>
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white"
+                    aria-label="Toggle menu"
+                >
+                    {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
             </div>
+
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden fixed inset-0 z-40 bg-black/90 backdrop-blur-xl"
+                    >
+                        <motion.nav
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3, delay: 0.1 }}
+                            className="flex flex-col gap-2 px-6 pt-24 pb-8"
+                        >
+                            {items.map((item, index) => {
+                                const Icon = item.icon
+                                const isActive = activeTab === item.name
+                                return (
+                                    <motion.div
+                                        key={item.name}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.15 + index * 0.05 }}
+                                    >
+                                        <Link
+                                            href={item.url}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setActiveTab(item.name);
+                                                handleScrollTo(item.url);
+                                            }}
+                                            className={cn(
+                                                "flex items-center gap-4 px-4 py-4 rounded-xl transition-all",
+                                                isActive
+                                                    ? "bg-coral/10 border border-coral/20 text-coral"
+                                                    : "text-white/70 hover:bg-white/5 hover:text-white border border-transparent"
+                                            )}
+                                        >
+                                            <Icon size={20} strokeWidth={2} />
+                                            <span className="text-base font-semibold">{item.name}</span>
+                                            {isActive && (
+                                                <span className="ml-auto w-2 h-2 bg-coral rounded-full" />
+                                            )}
+                                        </Link>
+                                    </motion.div>
+                                )
+                            })}
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="mt-6"
+                            >
+                                <Button
+                                    className="w-full rounded-xl bg-coral hover:bg-coral/90 text-white h-14 text-base font-bold shadow-lg shadow-coral/20"
+                                    onClick={() => handleScrollTo("#waitlist_form")}
+                                >
+                                    Join Waitlist <ArrowRight size={18} className="ml-2" />
+                                </Button>
+                            </motion.div>
+                        </motion.nav>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     )
 }
