@@ -15,12 +15,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { IntegrationLogo, IntegrationType } from "@/components/ui/integration-logo";
 
-const integrations = [
-    { name: "Stripe", icon: CreditCard, desc: "Payments" },
-    { name: "Shopify", icon: ShoppingBag, desc: "E-commerce" },
-    { name: "Meta Ads", icon: Megaphone, desc: "Advertising" },
-    { name: "Google Ads", icon: BarChart3, desc: "Advertising" },
+const integrations: { name: string; type: IntegrationType; desc: string }[] = [
+    { name: "Stripe", type: "stripe", desc: "Payments" },
+    { name: "Shopify", type: "shopify", desc: "E-commerce" },
+    { name: "Meta Ads", type: "meta", desc: "Advertising" },
+    { name: "Google Ads", type: "google", desc: "Advertising" },
 ];
 
 const stats = [
@@ -34,10 +35,9 @@ function IntegrationPill({
     integration,
     index,
 }: {
-    integration: (typeof integrations)[0];
+    integration: typeof integrations[number];
     index: number;
 }) {
-    const Icon = integration.icon;
 
     return (
         <motion.div
@@ -57,11 +57,10 @@ function IntegrationPill({
 
             <div className="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl p-5 flex items-center gap-4 transition-all duration-300 group-hover:border-coral/30 group-hover:bg-white/[0.07]">
                 {/* Icon */}
-                <div className="w-11 h-11 rounded-xl bg-coral/15 flex items-center justify-center shrink-0 group-hover:bg-coral/25 transition-colors duration-300">
-                    <Icon
-                        size={20}
-                        className="text-coral"
-                        strokeWidth={2}
+                <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-coral/25 transition-colors duration-300">
+                    <IntegrationLogo
+                        type={integration.type}
+                        className="text-white group-hover:text-white transition-colors"
                     />
                 </div>
 
