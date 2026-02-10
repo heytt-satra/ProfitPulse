@@ -114,3 +114,94 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── Shadow Overlay Glow System ─── */
+.shadow-glow-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shadow-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  /* Promote to own GPU compositor layer */
+  transform: translateZ(0);
+}
+
+/* Orb 1: Large top-center ambient glow */
+.shadow-glow-orb-1 {
+  width: 120vw;
+  height: 80vh;
+  top: -20%;
+  left: -10%;
+  opacity: 0.6;
+  animation: glow-drift-1 25s ease-in-out infinite;
+}
+
+/* Orb 2: Medium bottom-right glow */
+.shadow-glow-orb-2 {
+  width: 80vw;
+  height: 60vh;
+  bottom: -10%;
+  right: -20%;
+  opacity: 0.4;
+  animation: glow-drift-2 30s ease-in-out infinite;
+}
+
+/* Orb 3: Small accent glow — coral tinted */
+.shadow-glow-orb-3 {
+  width: 50vw;
+  height: 50vh;
+  top: 40%;
+  left: -10%;
+  opacity: 0.35;
+  animation: glow-drift-3 20s ease-in-out infinite;
+}
+
+/* GPU-only keyframes: transform only, no layout/paint */
+@keyframes glow-drift-1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(5%, 3%) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-3%, -2%) scale(0.97);
+  }
+}
+
+@keyframes glow-drift-2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  40% {
+    transform: translate(-6%, -4%) scale(1.08);
+  }
+
+  70% {
+    transform: translate(4%, 2%) scale(0.95);
+  }
+}
+
+@keyframes glow-drift-3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(8%, -5%) scale(1.1);
+  }
+}

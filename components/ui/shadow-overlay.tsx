@@ -34,20 +34,30 @@ export function ShadowOverlay({
                 ...style,
             }}
         >
-            {/* Lightweight CSS gradients instead of SVG filters */}
-            <div
-                style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: `
-                        radial-gradient(ellipse 80% 60% at 50% 0%, ${color}40 0%, transparent 70%),
-                        radial-gradient(ellipse 60% 50% at 80% 80%, ${color}20 0%, transparent 60%),
-                        radial-gradient(ellipse 50% 40% at 20% 60%, ${color}15 0%, transparent 50%)
-                    `,
-                    opacity: 0.9,
-                    willChange: "auto",
-                }}
-            />
+            {/* Animated ambient glow — GPU-only CSS transforms, no layout/paint */}
+            <div className="shadow-glow-layer" aria-hidden="true">
+                {/* Primary large glow — top center */}
+                <div
+                    className="shadow-glow-orb shadow-glow-orb-1"
+                    style={{
+                        background: `radial-gradient(ellipse at center, ${color} 0%, transparent 70%)`,
+                    }}
+                />
+                {/* Secondary glow — bottom right */}
+                <div
+                    className="shadow-glow-orb shadow-glow-orb-2"
+                    style={{
+                        background: `radial-gradient(ellipse at center, ${color} 0%, transparent 65%)`,
+                    }}
+                />
+                {/* Accent glow — left */}
+                <div
+                    className="shadow-glow-orb shadow-glow-orb-3"
+                    style={{
+                        background: `radial-gradient(ellipse at center, #E8454540 0%, transparent 60%)`,
+                    }}
+                />
+            </div>
 
             <div className="relative z-10 w-full h-full">
                 {children}
