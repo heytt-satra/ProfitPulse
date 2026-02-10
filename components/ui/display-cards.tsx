@@ -46,7 +46,7 @@ export default function DisplayCards() {
             <CardSwap
                 delay={3000}
                 width="min(300px, 85vw)"
-                height="min(420px, 75vh)"
+                height="min(460px, 80vh)"
                 verticalDistance={-60}
                 cardDistance={20}
                 skewAmount={0}
