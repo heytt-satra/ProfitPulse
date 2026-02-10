@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -8,16 +8,41 @@ import { Logo } from "@/components/ui/logo";
 
 export function StickyCTA() {
     const [isVisible, setIsVisible] = useState(false);
+    const rafRef = useRef<number | null>(null);
+
     useEffect(() => {
-        const handleScroll = () => setIsVisible(window.scrollY > window.innerHeight * 0.5);
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        let lastVisible = false;
+
+        const handleScroll = () => {
+            if (rafRef.current) return;
+            rafRef.current = requestAnimationFrame(() => {
+                const visible = window.scrollY > window.innerHeight * 0.5;
+                if (visible !== lastVisible) {
+                    lastVisible = visible;
+                    setIsVisible(visible);
+                }
+                rafRef.current = null;
+            });
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        };
     }, []);
 
     return (
         <AnimatePresence>
             {isVisible && (
-                <motion.div initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -100, opacity: 0 }} transition={{ duration: 0.3, ease: "easeOut" }} className="fixed top-0 left-0 right-0 z-50 bg-dark/90 backdrop-blur-xl border-b border-white/10 py-3 px-4">
+                <motion.div
+                    initial={{ y: -100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -100, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="fixed top-0 left-0 right-0 z-50 bg-dark/90 border-b border-white/10 py-3 px-4"
+                    style={{ willChange: "transform, opacity" }}
+                >
                     <div className="container mx-auto flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Logo iconOnly className="scale-[0.4]" />

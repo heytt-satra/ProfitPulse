@@ -36,14 +36,15 @@
   --foreground: #F1F1F1;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* Removed scroll-behavior: smooth — JS handles smooth scrolling.
+   CSS scroll-behavior causes jank on high-content pages. */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Glow Utilities ─── */
@@ -76,14 +77,12 @@ body {
 }
 
 /* Card Swap Styles */
-/* Card Swap Styles */
 .card-swap-container {
   position: relative;
   width: 100%;
   height: 100%;
   perspective: 900px;
   overflow: visible;
-  /* Shift slightly left on desktop as requested */
   transform: translateX(-10%);
 }
 
@@ -101,5 +100,17 @@ body {
   .card-swap-container {
     transform: scale(0.7);
     transform-origin: center center;
+  }
+}
+
+/* ─── Performance: reduce motion for users who prefer it ─── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

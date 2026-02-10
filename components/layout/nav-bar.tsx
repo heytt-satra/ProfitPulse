@@ -34,21 +34,31 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768)
-        }
+        let rafId: number | null = null
+        let lastScrolled = window.scrollY > 50
+
+        const handleResize = () => setIsMobile(window.innerWidth < 768)
 
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50)
+            if (rafId) return
+            rafId = requestAnimationFrame(() => {
+                const scrolled = window.scrollY > 50
+                if (scrolled !== lastScrolled) {
+                    lastScrolled = scrolled
+                    setIsScrolled(scrolled)
+                }
+                rafId = null
+            })
         }
 
         handleResize()
-        handleScroll()
-        window.addEventListener("resize", handleResize)
-        window.addEventListener("scroll", handleScroll)
+        setIsScrolled(lastScrolled)
+        window.addEventListener("resize", handleResize, { passive: true })
+        window.addEventListener("scroll", handleScroll, { passive: true })
         return () => {
             window.removeEventListener("resize", handleResize)
             window.removeEventListener("scroll", handleScroll)
+            if (rafId) cancelAnimationFrame(rafId)
         }
     }, [])
 
