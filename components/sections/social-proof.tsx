@@ -60,7 +60,7 @@ function IntegrationPill({
                 <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-coral/25 transition-colors duration-300">
                     <IntegrationLogo
                         type={integration.type}
-                        className="text-white group-hover:text-white transition-colors"
+                        className="transition-transform group-hover:scale-110 duration-300"
                     />
                 </div>
 
