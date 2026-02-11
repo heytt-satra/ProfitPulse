@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ProfitPulse
 
-## Getting Started
+**ProfitPulse** is an AI-powered financial intelligence platform for SME founders.
 
-First, run the development server:
+## 🚀 Getting Started
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project is a full-stack application with a **FastAPI Backend** and **Next.js Frontend**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- PostgreSQL & Redis (or Docker)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Backend Setup (FastAPI)
 
-## Learn More
+The backend handles Authentication, AI Logic (Vanna.ai), and Integrations.
 
-To learn more about Next.js, take a look at the following resources:
+1.  Navigate to the backend directory:
+    ```bash
+    cd backend
+    ```
+2.  Create a virtual environment:
+    ```bash
+    python -m venv venv
+    .\venv\Scripts\activate  # Windows
+    # source venv/bin/activate  # Mac/Linux
+    ```
+3.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  Setup Environment & Database:
+    ```bash
+    copy .env.example .env
+    # Check .env and ensure DATABASE_URL/OPENAI_API_KEY are set
+    ```
+    *Tip: Run `docker-compose up -d` in `/backend` to start Postgres/Redis if needed.*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5.  Run Migrations:
+    ```bash
+    alembic revision --autogenerate -m "Init"
+    alembic upgrade head
+    ```
+6.  Start the Server:
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+    *Backend will be running at [http://localhost:8000](http://localhost:8000)*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### 2. Frontend Setup (Next.js)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The frontend provides the Dashboard and Chat Interface.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  Navigate to the root directory (if not already there):
+    ```bash
+    cd ..
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the Development Server:
+    ```bash
+    npm run dev
+    ```
+4.  Open [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🌟 Key Features Implemented
+
+-   **Dashboard**: Real-time financial metrics (Revenue, Profit, Margins).
+-   **AI Analyst**: Ask natural language questions ("What was my profit last week?") via Vanna.ai.
+-   **Integrations**: Connect Stripe and Meta Ads (Mock OAuth flows ready).
+-   **Authentication**: Secure Login/Signup with JWT.
+
+## 🛠️ Tech Stack
+
+-   **Frontend**: Next.js 14, TailwindCSS, Shadcn UI, Recharts, Zustand.
+-   **Backend**: FastAPI, SQLAlchemy, Alembic, Pydantic.
+-   **AI**: Vanna.ai (OpenAI + ChromaDB).
+-   **Infrastructure**: Docker, Redis, Celery.
