@@ -1,5 +1,5 @@
-from vanna.google import GoogleGeminiChat
-from vanna.chromadb import ChromaDB_VectorStore
+from vanna.legacy.google import GoogleGeminiChat
+from vanna.legacy.chromadb import ChromaDB_VectorStore
 from app.core.config import settings
 import logging
 
