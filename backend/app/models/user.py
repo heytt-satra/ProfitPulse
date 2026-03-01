@@ -9,7 +9,7 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    hashed_password = Column(String, nullable=True)
     full_name = Column(String, nullable=True)
     company_name = Column(String, nullable=True)
     base_currency = Column(String, default="USD")

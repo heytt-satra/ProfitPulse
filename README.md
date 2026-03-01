@@ -15,7 +15,7 @@ This project is a full-stack application with a **FastAPI Backend** and **Next.j
 
 ### 1. Backend Setup (FastAPI)
 
-The backend handles Authentication, AI Logic (Vanna.ai), and Integrations.
+The backend handles Supabase-token authentication, AI logic (Vanna.ai), and integrations.
 
 1.  Navigate to the backend directory:
     ```bash
@@ -34,13 +34,12 @@ The backend handles Authentication, AI Logic (Vanna.ai), and Integrations.
 4.  Setup Environment & Database:
     ```bash
     copy .env.example .env
-    # Check .env and ensure DATABASE_URL/OPENAI_API_KEY are set
+    # Check .env and ensure DATABASE_URL/SUPABASE_URL/SUPABASE_ANON_KEY/OPENAI_API_KEY are set
     ```
     *Tip: Run `docker-compose up -d` in `/backend` to start Postgres/Redis if needed.*
 
 5.  Run Migrations:
     ```bash
-    alembic revision --autogenerate -m "Init"
     alembic upgrade head
     ```
 6.  Start the Server:
@@ -75,8 +74,8 @@ The frontend provides the Dashboard and Chat Interface.
 
 -   **Dashboard**: Real-time financial metrics (Revenue, Profit, Margins).
 -   **AI Analyst**: Ask natural language questions ("What was my profit last week?") via Vanna.ai.
--   **Integrations**: Connect Stripe and Meta Ads (Mock OAuth flows ready).
--   **Authentication**: Secure Login/Signup with JWT.
+-   **Integrations**: Connector endpoints for Stripe, Meta Ads, Shopify, and Google Ads.
+-   **Authentication**: Supabase Auth bearer-token session model.
 
 ## 🛠️ Tech Stack
 

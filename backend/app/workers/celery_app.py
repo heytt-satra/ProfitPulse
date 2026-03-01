@@ -11,7 +11,12 @@ if hasattr(settings, "REDIS_URL") and settings.REDIS_URL:
     BROKER_URL = settings.REDIS_URL
     BACKEND_URL = settings.REDIS_URL
 
-celery_app = Celery("profitpulse_worker", broker=BROKER_URL, backend=BACKEND_URL)
+celery_app = Celery(
+    "profitpulse_worker",
+    broker=BROKER_URL,
+    backend=BACKEND_URL,
+    include=["app.workers.tasks"],
+)
 
 celery_app.conf.task_routes = {
     "app.workers.tasks.*": {"queue": "main-queue"},

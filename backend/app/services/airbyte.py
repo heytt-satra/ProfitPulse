@@ -1,66 +1,79 @@
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import httpx
+
 from app.core.config import settings
 
+
 class AirbyteService:
-    def __init__(self, base_url: str = "http://localhost:8001/api/v1", username: str = "airbyte", password: str = "password"):
-        self.base_url = base_url
-        self.auth = (username, password)
-        # In a real scenario, these would come from settings
+    def __init__(self) -> None:
+        self.base_url = settings.AIRBYTE_URL.rstrip("/")
+        self.auth = (settings.AIRBYTE_USERNAME, settings.AIRBYTE_PASSWORD)
+
+    async def _post(self, path: str, payload: dict[str, Any]) -> Optional[dict[str, Any]]:
+        try:
+            async with httpx.AsyncClient(timeout=20.0) as client:
+                response = await client.post(
+                    f"{self.base_url}{path}",
+                    json=payload,
+                    auth=self.auth,
+                )
+        except httpx.HTTPError:
+            return None
+
+        if response.status_code >= 300:
+            return None
+        return response.json()
 
     async def check_health(self) -> bool:
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(timeout=10.0) as client:
                 response = await client.get(f"{self.base_url}/health")
-                return response.status_code == 200
-        except Exception:
+        except httpx.HTTPError:
             return False
+        return response.status_code == 200
 
-    async def create_source(self, name: str, source_definition_id: str, connection_configuration: Dict[str, Any], workspace_id: str) -> Optional[str]:
-        """
-        Creates a source in Airbyte. Returns the sourceId.
-        """
-        try:
-            payload = {
-                "name": name,
-                "sourceDefinitionId": source_definition_id,
-                "connectionConfiguration": connection_configuration,
-                "workspaceId": workspace_id
-            }
-            async with httpx.AsyncClient() as client:
-                response = await client.post(
-                    f"{self.base_url}/sources/create",
-                    json=payload,
-                    auth=self.auth
-                )
-                if response.status_code == 200:
-                    return response.json().get("sourceId")
-                return None
-        except Exception as e:
-            print(f"Error creating source: {e}")
+    async def create_source(
+        self,
+        name: str,
+        source_definition_id: str,
+        connection_configuration: Dict[str, Any],
+        workspace_id: Optional[str] = None,
+    ) -> Optional[str]:
+        payload = {
+            "name": name,
+            "sourceDefinitionId": source_definition_id,
+            "connectionConfiguration": connection_configuration,
+            "workspaceId": workspace_id or settings.AIRBYTE_WORKSPACE_ID,
+        }
+        result = await self._post("/sources/create", payload)
+        if not result:
             return None
+        return result.get("sourceId")
 
-    async def create_connection(self, source_id: str, destination_id: str, prefix: str = "") -> Optional[str]:
-        """
-        Creates a connection between source and destination.
-        """
-        # Implementation would call /connections/create
-        # For MVP, we might just return a mock ID if Airbyte isn't running
-        return "mock_connection_id_123"
+    async def create_connection(
+        self,
+        source_id: str,
+        destination_id: Optional[str] = None,
+        namespace_definition: str = "destination",
+        namespace_format: str = "${SOURCE_NAMESPACE}",
+    ) -> Optional[str]:
+        payload = {
+            "sourceId": source_id,
+            "destinationId": destination_id or settings.AIRBYTE_DESTINATION_ID,
+            "namespaceDefinition": namespace_definition,
+            "namespaceFormat": namespace_format,
+            "scheduleType": "manual",
+        }
+        result = await self._post("/connections/create", payload)
+        if not result:
+            return None
+        return result.get("connectionId")
 
     async def trigger_sync(self, connection_id: str) -> bool:
-        """
-        Triggers a manual sync for a connection.
-        """
-        try:
-            async with httpx.AsyncClient() as client:
-                response = await client.post(
-                    f"{self.base_url}/connections/sync",
-                    json={"connectionId": connection_id},
-                    auth=self.auth
-                )
-                return response.status_code == 200
-        except Exception:
-            return False
+        payload = {"connectionId": connection_id}
+        result = await self._post("/connections/sync", payload)
+        return bool(result)
+
 
 airbyte_service = AirbyteService()

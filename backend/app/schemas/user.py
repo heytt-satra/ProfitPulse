@@ -16,6 +16,7 @@ class UserCreate(UserBase):
 # Properties to return via API
 class User(UserBase):
     id: UUID
+    base_currency: str = "USD"
     onboarding_completed: bool
     subscription_tier: str
 

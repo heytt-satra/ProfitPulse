@@ -9,6 +9,7 @@ class Integration(Base):
     __tablename__ = "integrations"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     platform = Column(String, nullable=False)
     access_token = Column(String, nullable=True)
@@ -21,3 +22,4 @@ class Integration(Base):
     metadata_config = Column(JSON, nullable=True, name="metadata") # 'metadata' is reserved in SQLAlchemy Base
 
     user = relationship("User", backref="integrations")
+    workspace = relationship("Workspace", backref="integrations")

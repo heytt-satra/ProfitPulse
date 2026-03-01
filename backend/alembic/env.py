@@ -20,9 +20,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from app.core.config import settings
 from app.core.database import Base
-from app.models.user import User
-from app.models.integration import Integration
-from app.models.financial_data import FinancialData
+import app.models  # noqa: F401
 
 target_metadata = Base.metadata
 

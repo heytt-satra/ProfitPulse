@@ -19,6 +19,9 @@
     ```bash
     copy .env.example .env
     ```
+    Required for auth/session:
+    - `SUPABASE_URL`
+    - `SUPABASE_ANON_KEY` or `SUPABASE_SERVICE_ROLE_KEY`
 
 4.  **Database:**
     Ensure you have PostgreSQL running (or use Docker).
@@ -29,7 +32,6 @@
 5.  **Migrations:**
     Initialize the database schema.
     ```bash
-    alembic revision --autogenerate -m "Initial migration"
     alembic upgrade head
     ```
 

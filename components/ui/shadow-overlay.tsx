@@ -5,7 +5,7 @@ import React, { CSSProperties } from "react";
 interface ShadowOverlayProps {
     type?: string;
     presetIndex?: number;
-    customImage?: any;
+    customImage?: unknown;
     sizing?: "fill" | "stretch";
     color?: string;
     animation?: { scale?: number; speed?: number; preview?: boolean };

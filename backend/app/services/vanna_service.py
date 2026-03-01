@@ -1,24 +1,25 @@
-from vanna.legacy.google import GoogleGeminiChat
 from vanna.legacy.chromadb import ChromaDB_VectorStore
+from vanna.legacy.openai import OpenAI_Chat
 from app.core.config import settings
 import logging
 
 # Check if keys are present to avoid startup crashes if optional
-API_KEY = settings.GEMINI_API_KEY or "gemini-placeholder"
+API_KEY = settings.OPENAI_API_KEY or "openai-placeholder"
+MODEL = settings.OPENAI_MODEL or "gpt-4o-mini"
 
-class ProfitPulseVanna(ChromaDB_VectorStore, GoogleGeminiChat):
+class ProfitPulseVanna(ChromaDB_VectorStore, OpenAI_Chat):
     def __init__(self, config=None):
-        # Initialize ChromaDB and GoogleGemini components
+        # Initialize ChromaDB and OpenAI components
         ChromaDB_VectorStore.__init__(self, config=config)
-        GoogleGeminiChat.__init__(self, config=config)
+        OpenAI_Chat.__init__(self, config=config)
 
 vanna_config = {
     "api_key": API_KEY,
-    "model": "gemini-pro", # Using gemini-pro as default text model
+    "model": MODEL,
     "path": "./chroma_db" # Local storage for vector/training data
 }
 
-# Only initialize if we have a key (or placeholder), but Gemini requires a real key to work.
+# Only initialize if we have a key (or placeholder), but OpenAI requires a real key to work.
 vn = ProfitPulseVanna(config=vanna_config)
 
 def train_setup():
@@ -30,6 +31,7 @@ def train_setup():
     ddl = """
     CREATE TABLE fact_daily_financials (
         id UUID PRIMARY KEY,
+        workspace_id UUID NOT NULL,
         user_id UUID NOT NULL,
         date DATE NOT NULL,
         revenue_gross NUMERIC(12, 2) DEFAULT 0,
@@ -56,10 +58,16 @@ def train_setup():
             vn.train(ddl=ddl)
             # Add some documentation examples
             vn.train(documentation="The table fact_daily_financials contains daily aggregated financial metrics for users.")
-            vn.train(sql="SELECT sum(revenue_gross) FROM fact_daily_financials WHERE user_id = 'USER_ID' AND date >= '2024-01-01'", description="Total revenue for a user since Jan 2024")
+            vn.train(
+                sql=(
+                    "SELECT sum(revenue_gross) FROM fact_daily_financials "
+                    "WHERE workspace_id = 'WORKSPACE_ID' AND date >= '2024-01-01'"
+                ),
+                description="Total revenue for a workspace since Jan 2024",
+            )
     except Exception as e:
         logging.warning(f"Vanna training check failed: {e}")
 
 # Run setup
-if API_KEY != "gemini-placeholder":
+if API_KEY != "openai-placeholder":
     train_setup()

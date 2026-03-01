@@ -1,94 +1,251 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { api } from '@/lib/api';
+import { supabase } from '@/lib/supabase';
 
 interface User {
     id: string;
     email: string;
     full_name?: string;
     company_name?: string;
+    base_currency?: string;
     subscription_tier?: string;
+    onboarding_completed?: boolean;
+}
+
+interface SessionWorkspace {
+    workspace_id: string;
+    role: string;
+}
+
+interface SessionResponse {
+    authenticated: boolean;
+    user: User;
+    workspaces: SessionWorkspace[];
 }
 
 interface AuthState {
     user: User | null;
-    token: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
+    activeWorkspaceId: string | null;
+    activeRole: string | null;
     login: (email: string, password: string) => Promise<void>;
     signup: (email: string, password: string, fullName: string) => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
+    setActiveWorkspace: (workspaceId: string) => void;
 }
+
+const isBrowser = () => typeof window !== 'undefined';
+
+const getStoredWorkspaceId = () => {
+    if (!isBrowser()) {
+        return null;
+    }
+    return localStorage.getItem('workspace_id');
+};
+
+const setStoredWorkspaceId = (workspaceId: string) => {
+    if (!isBrowser()) {
+        return;
+    }
+    localStorage.setItem('workspace_id', workspaceId);
+};
+
+const clearStoredWorkspaceId = () => {
+    if (!isBrowser()) {
+        return;
+    }
+    localStorage.removeItem('workspace_id');
+};
+
+const syncServerSessionCookie = async (accessToken: string) => {
+    await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ access_token: accessToken }),
+    });
+};
+
+const clearServerSessionCookie = async () => {
+    await fetch('/api/auth/session', {
+        method: 'DELETE',
+    });
+};
+
+const resolveActiveWorkspace = (workspaces: SessionWorkspace[], preferredWorkspaceId: string | null) => {
+    if (!workspaces.length) {
+        return { workspaceId: null, role: null };
+    }
+
+    const matched = preferredWorkspaceId
+        ? workspaces.find((workspace) => workspace.workspace_id === preferredWorkspaceId)
+        : null;
+
+    const selected = matched ?? workspaces[0];
+    return {
+        workspaceId: selected.workspace_id,
+        role: selected.role,
+    };
+};
 
 export const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
             user: null,
-            token: null,
             isAuthenticated: false,
             isLoading: false,
+            activeWorkspaceId: null,
+            activeRole: null,
 
             login: async (email, password) => {
                 set({ isLoading: true });
                 try {
-                    const params = new URLSearchParams();
-                    params.append('username', email);
-                    params.append('password', password);
-
-                    const response = await api.post('/auth/login', params, {
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email,
+                        password,
                     });
+                    if (error || !data.session?.access_token) {
+                        throw error ?? new Error('Unable to authenticate with Supabase');
+                    }
 
-                    const { access_token } = response.data;
-                    set({ token: access_token, isAuthenticated: true });
+                    await syncServerSessionCookie(data.session.access_token);
 
-                    // Fetch user details? The login endpoint currently only returns token.
-                    // We might need a /me endpoint or similar. For now, we set minimal state.
-                    // Let's implement checkAuth to fetch user details if we had a /me endpoint.
-                    // Since we don't have /me, we might have to rely on decoding the token or adding user to login response.
-                    // For MVP, let's assume we can fetch user profile or decode token later.
-                    // Wait, Auth endpoint `login_access_token` returns `Token` schema, which is just access_token.
-                    // I should probably add a `/auth/me` endpoint in the backend for full profile.
+                    const sessionRes = await api.get<SessionResponse>('/auth/session');
+                    const preferredWorkspaceId = get().activeWorkspaceId ?? getStoredWorkspaceId();
+                    const { workspaceId, role } = resolveActiveWorkspace(
+                        sessionRes.data.workspaces,
+                        preferredWorkspaceId,
+                    );
 
+                    if (workspaceId) {
+                        setStoredWorkspaceId(workspaceId);
+                    }
+
+                    set({
+                        user: sessionRes.data.user,
+                        isAuthenticated: true,
+                        isLoading: false,
+                        activeWorkspaceId: workspaceId,
+                        activeRole: role,
+                    });
                 } catch (error) {
-                    console.error('Login failed:', error);
+                    clearStoredWorkspaceId();
+                    await clearServerSessionCookie();
+                    set({
+                        user: null,
+                        isAuthenticated: false,
+                        isLoading: false,
+                        activeWorkspaceId: null,
+                        activeRole: null,
+                    });
                     throw error;
-                } finally {
-                    set({ isLoading: false });
                 }
             },
 
             signup: async (email, password, fullName) => {
                 set({ isLoading: true });
                 try {
-                    const response = await api.post('/auth/signup', {
-                        email, password, full_name: fullName
+                    const { error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: {
+                                full_name: fullName,
+                            },
+                        },
                     });
-                    // Auto login after signup? Or require login.
-                    // The endpoint returns the User object.
-                } catch (error) {
-                    console.error('Signup failed:', error);
-                    throw error;
+                    if (error) {
+                        throw error;
+                    }
                 } finally {
                     set({ isLoading: false });
                 }
             },
 
-            logout: () => {
-                set({ user: null, token: null, isAuthenticated: false });
-                localStorage.removeItem('token');
+            logout: async () => {
+                await supabase.auth.signOut();
+                await clearServerSessionCookie();
+                clearStoredWorkspaceId();
+                set({
+                    user: null,
+                    isAuthenticated: false,
+                    isLoading: false,
+                    activeWorkspaceId: null,
+                    activeRole: null,
+                });
             },
 
             checkAuth: async () => {
-                // Placeholder for when we have a /me endpoint
-                // const token = get().token;
-                // if (token) { ... }
-            }
+                set({ isLoading: true });
+                try {
+                    const { data } = await supabase.auth.getSession();
+                    const accessToken = data.session?.access_token;
+                    if (!accessToken) {
+                        await clearServerSessionCookie();
+                        clearStoredWorkspaceId();
+                        set({
+                            user: null,
+                            isAuthenticated: false,
+                            isLoading: false,
+                            activeWorkspaceId: null,
+                            activeRole: null,
+                        });
+                        return;
+                    }
+
+                    await syncServerSessionCookie(accessToken);
+                    const sessionRes = await api.get<SessionResponse>('/auth/session');
+
+                    const preferredWorkspaceId = get().activeWorkspaceId ?? getStoredWorkspaceId();
+                    const { workspaceId, role } = resolveActiveWorkspace(
+                        sessionRes.data.workspaces,
+                        preferredWorkspaceId,
+                    );
+
+                    if (workspaceId) {
+                        setStoredWorkspaceId(workspaceId);
+                    } else {
+                        clearStoredWorkspaceId();
+                    }
+
+                    set({
+                        user: sessionRes.data.user,
+                        isAuthenticated: sessionRes.data.authenticated,
+                        isLoading: false,
+                        activeWorkspaceId: workspaceId,
+                        activeRole: role,
+                    });
+                } catch {
+                    await clearServerSessionCookie();
+                    clearStoredWorkspaceId();
+                    set({
+                        user: null,
+                        isAuthenticated: false,
+                        isLoading: false,
+                        activeWorkspaceId: null,
+                        activeRole: null,
+                    });
+                }
+            },
+
+            setActiveWorkspace: (workspaceId: string) => {
+                setStoredWorkspaceId(workspaceId);
+                set({ activeWorkspaceId: workspaceId });
+            },
         }),
         {
             name: 'auth-storage',
-            partialize: (state) => ({ token: state.token, isAuthenticated: state.isAuthenticated }),
-        }
-    )
+            partialize: (state) => ({
+                user: state.user,
+                isAuthenticated: state.isAuthenticated,
+                activeWorkspaceId: state.activeWorkspaceId,
+                activeRole: state.activeRole,
+            }),
+        },
+    ),
 );
