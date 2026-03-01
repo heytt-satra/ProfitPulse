@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
@@ -13,16 +12,21 @@ import NumberFlow from "@number-flow/react";
 
 /* ─── Custom Hook for Media Query ─── */
 function useMediaQuery(query: string) {
-    const [matches, setMatches] = useState(false);
+    const [matches, setMatches] = useState(
+        () => (typeof window !== "undefined" ? window.matchMedia(query).matches : false),
+    );
+
     useEffect(() => {
-        const media = window.matchMedia(query);
-        if (media.matches !== matches) {
-            setMatches(media.matches);
+        if (typeof window === "undefined") {
+            return;
         }
-        const listener = () => setMatches(media.matches);
+
+        const media = window.matchMedia(query);
+        const listener = (event: MediaQueryListEvent) => setMatches(event.matches);
         media.addEventListener("change", listener);
         return () => media.removeEventListener("change", listener);
-    }, [matches, query]);
+    }, [query]);
+
     return matches;
 }
 
@@ -150,7 +154,7 @@ export function Pricing({
                 <label className="relative inline-flex items-center cursor-pointer">
                     <Label>
                         <Switch
-                            ref={switchRef as any}
+                            ref={switchRef}
                             checked={!isMonthly}
                             onCheckedChange={handleToggle}
                             className="relative data-[state=checked]:bg-teal"

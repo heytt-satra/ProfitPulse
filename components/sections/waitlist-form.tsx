@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, AlertCircle, Lock, Sparkles, Send } from "lucide-react";
+import { CheckCircle2, AlertCircle, Lock, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FadeIn } from "@/components/animations/fade-in";
@@ -56,8 +56,8 @@ export function WaitlistForm() {
 
             setIsSubmitted(true);
             form.reset();
-        } catch (error: any) {
-            setServerError(error.message);
+        } catch (error: unknown) {
+            setServerError(error instanceof Error ? error.message : "Failed to join waitlist");
         } finally {
             setIsLoading(false);
         }
@@ -67,7 +67,7 @@ export function WaitlistForm() {
     const labelStyle = "text-xs font-bold tracking-widest uppercase text-white/40 mb-1.5 block";
 
     return (
-        <section id="join" className="py-32 relative overflow-hidden">
+        <section id="waitlist_form" className="py-32 relative overflow-hidden">
             <div className="max-w-2xl mx-auto relative z-10 px-4 md:px-6">
                 <FadeIn className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-coral/10 border border-coral/20 text-coral text-[10px] font-bold uppercase tracking-wider mb-4">
@@ -217,15 +217,15 @@ export function WaitlistForm() {
                                         </div>
 
                                         <div className="flex items-center justify-center gap-6 pt-4">
-                                            <p className="text-[10px] text-white/20 flex items-center gap-1.5 uppercase tracking-tighter font-bold">
+                                            <div className="text-[10px] text-white/20 flex items-center gap-1.5 uppercase tracking-tighter font-bold">
                                                 <Lock size={10} className="text-teal/40" />
                                                 Bank-Grade Security
-                                            </p>
+                                            </div>
                                             <div className="w-1 h-1 rounded-full bg-white/10" />
-                                            <p className="text-[10px] text-white/20 flex items-center gap-1.5 uppercase tracking-tighter font-bold">
+                                            <div className="text-[10px] text-white/20 flex items-center gap-1.5 uppercase tracking-tighter font-bold">
                                                 <Logo iconOnly className="scale-[0.25] opacity-40" />
                                                 Early Access Invite
-                                            </p>
+                                            </div>
                                         </div>
                                     </motion.form>
                                 )}

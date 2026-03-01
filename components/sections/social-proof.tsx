@@ -1,21 +1,9 @@
 "use client";
 
-import { FadeIn } from "@/components/animations/fade-in";
 import { motion } from "framer-motion";
-import {
-    CreditCard,
-    ShoppingBag,
-    Megaphone,
-    BarChart3,
-    Quote,
-    Sparkles,
-    Users,
-    DollarSign,
-    Plug,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import React from "react";
-import { IntegrationLogo, IntegrationType } from "@/components/ui/integration-logo";
+import { Plug, Quote, Sparkles } from "lucide-react";
+import { FadeIn } from "@/components/animations/fade-in";
+import { IntegrationLogo, type IntegrationType } from "@/components/ui/integration-logo";
 
 const integrations: { name: string; type: IntegrationType; desc: string }[] = [
     { name: "Stripe", type: "stripe", desc: "Payments" },
@@ -24,21 +12,13 @@ const integrations: { name: string; type: IntegrationType; desc: string }[] = [
     { name: "Google Ads", type: "google", desc: "Advertising" },
 ];
 
-const stats = [
-    { icon: Users, value: "50+", label: "Founding Members" },
-    { icon: Plug, value: "4", label: "Integrations" },
-    { icon: DollarSign, value: "$2M+", label: "Revenue Tracked" },
-];
-
-/* ─── Floating Integration Card ─── */
 function IntegrationPill({
     integration,
     index,
 }: {
-    integration: typeof integrations[number];
+    integration: (typeof integrations)[number];
     index: number;
 }) {
-
     return (
         <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -52,163 +32,111 @@ function IntegrationPill({
             whileHover={{ y: -6, scale: 1.03 }}
             className="group relative"
         >
-            {/* Glow on hover */}
-            <div className="absolute -inset-px rounded-2xl bg-coral/0 group-hover:bg-coral/20 blur-xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
+            <div className="absolute -inset-px rounded-2xl bg-coral/0 opacity-0 blur-xl transition-all duration-500 group-hover:bg-coral/20 group-hover:opacity-100" />
 
-            <div className="relative bg-white/[0.04] border border-white/10 rounded-2xl p-5 flex items-center gap-4 transition-all duration-300 group-hover:border-coral/30 group-hover:bg-white/[0.07]">
-                {/* Icon */}
-                <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-coral/25 transition-colors duration-300">
+            <div className="relative flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 group-hover:border-coral/30 group-hover:bg-white/[0.07]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/5 transition-colors duration-300 group-hover:bg-coral/25">
                     <IntegrationLogo
                         type={integration.type}
-                        className="transition-transform group-hover:scale-110 duration-300"
+                        className="transition-transform duration-300 group-hover:scale-110"
                     />
                 </div>
 
-                {/* Text */}
                 <div>
-                    <p className="font-bold text-white text-sm">
-                        {integration.name}
-                    </p>
-                    <p className="text-white/30 text-xs">{integration.desc}</p>
+                    <p className="text-sm font-bold text-white">{integration.name}</p>
+                    <p className="text-xs text-white/30">{integration.desc}</p>
                 </div>
 
-                {/* Connected indicator */}
                 <div className="ml-auto flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-teal" />
-                    <span className="text-teal text-[10px] font-medium uppercase tracking-wider">
-                        Live
-                    </span>
+                    <div className="h-1.5 w-1.5 rounded-full bg-teal" />
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-teal">Live</span>
                 </div>
             </div>
         </motion.div>
     );
 }
 
-/* ─── Main Export ─── */
 export function SocialProof() {
     return (
-        <section id="social_proof" className="py-28 relative overflow-hidden">
-            <div className="container mx-auto px-4 md:px-6 relative z-10">
-                {/* ── Header ── */}
-                <FadeIn className="text-center mb-16">
-                    <p className="text-sm font-semibold tracking-widest uppercase text-teal mb-3">
-                        Our Story
-                    </p>
-                    <h2 className="text-3xl md:text-5xl font-bold font-heading text-white">
-                        Built by a Founder,{" "}
-                        <span className="text-coral">For Founders</span>
+        <section id="social_proof" className="relative overflow-hidden py-28">
+            <div className="container relative z-10 mx-auto px-4 md:px-6">
+                <FadeIn className="mb-16 text-center">
+                    <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-teal">Our Story</p>
+                    <h2 className="font-heading text-3xl font-bold text-white md:text-5xl">
+                        Built by a Founder, <span className="text-coral">For Founders</span>
                     </h2>
                 </FadeIn>
 
-                {/* ── Main Content Grid ── */}
-                <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-start max-w-6xl mx-auto">
-                    {/* ── Left: Founder Quote Card ── */}
+                <div className="mx-auto grid max-w-6xl items-start gap-10 md:grid-cols-2 lg:gap-16">
                     <FadeIn delay={0.1}>
                         <div className="relative">
-                            {/* Subtle card glow */}
-                            <div className="absolute -inset-1 bg-gradient-to-br from-coral/10 via-transparent to-teal/10 rounded-3xl blur-xl opacity-60" />
+                            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-coral/10 via-transparent to-teal/10 opacity-60 blur-xl" />
 
-                            <div className="relative bg-indigo/80 border border-white/10 rounded-3xl p-8 md:p-10">
-                                {/* Quote mark decoration */}
-                                <div className="absolute top-6 left-6 md:top-8 md:left-8">
-                                    <div className="w-10 h-10 rounded-full bg-coral/10 flex items-center justify-center">
-                                        <Quote
-                                            size={18}
-                                            className="text-coral"
-                                        />
+                            <div className="relative rounded-3xl border border-white/10 bg-indigo/80 p-8 md:p-10">
+                                <div className="absolute left-6 top-6 md:left-8 md:top-8">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-coral/10">
+                                        <Quote size={18} className="text-coral" />
                                     </div>
                                 </div>
 
-                                {/* Quote text */}
-                                <blockquote className="text-lg md:text-xl text-white/70 italic leading-relaxed mt-14 mb-8">
-                                    &ldquo;After spending 6 hours/week manually
-                                    reconciling Stripe, Meta, and bank
-                                    statements in Google Sheets, I built the
-                                    tool I wish existed.&rdquo;
+                                <blockquote className="mb-8 mt-14 text-lg italic leading-relaxed text-white/70 md:text-xl">
+                                    &ldquo;After spending 6 hours/week manually reconciling Stripe, Meta, and bank statements in Google Sheets, I built the tool I wish existed.&rdquo;
                                 </blockquote>
 
-                                {/* Divider */}
-                                <div className="w-12 h-0.5 bg-coral/40 mb-6" />
+                                <div className="mb-6 h-0.5 w-12 bg-coral/40" />
 
-                                {/* Author */}
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-coral rounded-full flex items-center justify-center text-sm font-bold font-heading text-white shadow-lg shadow-coral/25">
+                                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-coral font-heading text-sm font-bold text-white shadow-lg shadow-coral/25">
                                         HS
                                     </div>
                                     <div>
-                                        <p className="font-bold text-white">
-                                            heytt satra
-                                        </p>
-                                        <p className="text-sm text-white/40">
-                                            Founder, ProfitPulse
-                                        </p>
+                                        <p className="font-bold text-white">heytt satra</p>
+                                        <p className="text-sm text-white/40">Founder, ProfitPulse</p>
                                     </div>
                                 </div>
 
-                                {/* Decorative dots — bottom right */}
                                 <div className="absolute bottom-6 right-6 grid grid-cols-4 gap-1.5 opacity-20">
-                                    {Array.from({ length: 16 }).map((_, i) => (
-                                        <div
-                                            key={i}
-                                            className="w-1 h-1 rounded-full bg-white"
-                                        />
+                                    {Array.from({ length: 16 }).map((_, index) => (
+                                        <div key={index} className="h-1 w-1 rounded-full bg-white" />
                                     ))}
                                 </div>
                             </div>
                         </div>
                     </FadeIn>
 
-                    {/* ── Right: Integrations + Hub ── */}
                     <div className="space-y-4">
-                        {/* Hub header */}
                         <FadeIn delay={0.2}>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="w-8 h-8 rounded-lg bg-coral/15 flex items-center justify-center">
-                                    <Sparkles
-                                        size={16}
-                                        className="text-coral"
-                                    />
+                            <div className="mb-2 flex items-center gap-3">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-coral/15">
+                                    <Sparkles size={16} className="text-coral" />
                                 </div>
                                 <div>
-                                    <h3 className="text-white font-bold text-lg font-heading">
-                                        Works With Your Stack
-                                    </h3>
-                                    <p className="text-white/30 text-xs">
-                                        Connect in under 2 minutes
-                                    </p>
+                                    <h3 className="font-heading text-lg font-bold text-white">Works With Your Stack</h3>
+                                    <p className="text-xs text-white/30">Connect in under 2 minutes</p>
                                 </div>
                             </div>
                         </FadeIn>
 
-                        {/* Integration pills */}
                         <div className="space-y-3">
-                            {integrations.map((integration, i) => (
-                                <IntegrationPill
-                                    key={i}
-                                    integration={integration}
-                                    index={i}
-                                />
+                            {integrations.map((integration, index) => (
+                                <IntegrationPill key={integration.name} integration={integration} index={index} />
                             ))}
                         </div>
 
-                        {/* "More coming soon" teaser */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.8 }}
-                            className="flex items-center justify-center gap-2 py-3 border border-dashed border-white/10 rounded-xl"
+                            className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-white/10 py-3"
                         >
                             <Plug size={14} className="text-white/20" />
-                            <span className="text-xs text-white/30 font-medium">
-                                QuickBooks, Xero, WooCommerce &mdash; coming
-                                soon
+                            <span className="text-xs font-medium text-white/30">
+                                QuickBooks, Xero, WooCommerce - coming soon
                             </span>
                         </motion.div>
                     </div>
                 </div>
-
-
             </div>
         </section>
     );

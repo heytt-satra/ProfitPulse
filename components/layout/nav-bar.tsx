@@ -1,7 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useRouter } from "next/navigation"
+
+// ... imports ...
+
 import Link from "next/link"
 import { LucideIcon, Home, Sparkles, Zap, CreditCard, UserPlus, ArrowRight, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -28,16 +32,16 @@ const defaultItems: NavItem[] = [
 ]
 
 export function NavBar({ items = defaultItems, className }: NavBarProps) {
+    const router = useRouter()
     const [activeTab, setActiveTab] = useState(items[0]?.name || "")
-    const [isMobile, setIsMobile] = useState(false)
-    const [isScrolled, setIsScrolled] = useState(false)
+    const [isScrolled, setIsScrolled] = useState(
+        () => (typeof window !== "undefined" ? window.scrollY > 50 : false)
+    )
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     useEffect(() => {
         let rafId: number | null = null
         let lastScrolled = window.scrollY > 50
-
-        const handleResize = () => setIsMobile(window.innerWidth < 768)
 
         const handleScroll = () => {
             if (rafId) return
@@ -51,12 +55,8 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
             })
         }
 
-        handleResize()
-        setIsScrolled(lastScrolled)
-        window.addEventListener("resize", handleResize, { passive: true })
         window.addEventListener("scroll", handleScroll, { passive: true })
         return () => {
-            window.removeEventListener("resize", handleResize)
             window.removeEventListener("scroll", handleScroll)
             if (rafId) cancelAnimationFrame(rafId)
         }
@@ -131,14 +131,17 @@ export function NavBar({ items = defaultItems, className }: NavBarProps) {
                 </div>
 
                 {/* CTA */}
+                <Link href="/login" className="hidden md:block text-sm font-medium text-white/70 hover:text-white mr-4 transition-colors">
+                    Log In
+                </Link>
                 <Button
                     className={cn(
                         "rounded-full bg-coral hover:bg-coral/90 text-white shadow-lg shadow-coral/20 transition-all duration-300",
                         isScrolled ? "px-4 h-8 text-xs" : "px-6 h-10 text-sm"
                     )}
-                    onClick={() => handleScrollTo("#waitlist_form")}
+                    onClick={() => router.push("/dashboard")}
                 >
-                    Join Waitlist <ArrowRight size={isScrolled ? 14 : 16} className="ml-2" />
+                    Open Dashboard <ArrowRight size={isScrolled ? 14 : 16} className="ml-2" />
                 </Button>
             </div>
 

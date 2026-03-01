@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { ShadowOverlay } from "@/components/ui/shadow-overlay";
-import { NavBar } from "@/components/layout/nav-bar";
+import { ConditionalNavBar } from "@/components/layout/conditional-navbar";
+import Providers from "./providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -59,8 +60,10 @@ export default function RootLayout({
           noise={{ opacity: 0, scale: 10 }}
           style={{ position: "fixed", zIndex: -1 }}
         />
-        <NavBar />
-        {children}
+        <ConditionalNavBar />
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

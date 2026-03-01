@@ -1,0 +1,5 @@
+﻿app/dashboard/integrations/page.tsx(5,87): error TS2307: Cannot find module '@/components/ui/card' or its corresponding type declarations.
+app/dashboard/integrations/page.tsx(7,23): error TS2307: Cannot find module '@/components/ui/badge' or its corresponding type declarations.
+app/dashboard/page.tsx(4,58): error TS2307: Cannot find module '@/components/ui/card' or its corresponding type declarations.
+components/dashboard/chat-interface.tsx(7,75): error TS2307: Cannot find module '@/components/ui/card' or its corresponding type declarations.
+components/dashboard/chat-interface.tsx(8,28): error TS2307: Cannot find module '@/components/ui/scroll-area' or its corresponding type declarations.
