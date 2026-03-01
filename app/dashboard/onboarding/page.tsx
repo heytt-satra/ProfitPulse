@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,7 @@ const platforms = [
     { id: 'google_ads', name: 'Google Ads', description: 'Google ad spend and ROAS', icon: Search },
 ] as const;
 
-export default function OnboardingPage() {
+function OnboardingPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [step, setStep] = useState(0);
@@ -405,5 +405,13 @@ export default function OnboardingPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function OnboardingPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+            <OnboardingPageContent />
+        </Suspense>
     );
 }

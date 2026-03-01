@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { api } from '@/lib/api';
-import { supabase } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 interface User {
     id: string;
@@ -61,6 +61,14 @@ const clearStoredWorkspaceId = () => {
     localStorage.removeItem('workspace_id');
 };
 
+const ensureSupabaseConfigured = () => {
+    if (!isSupabaseConfigured) {
+        throw new Error(
+            'Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.',
+        );
+    }
+};
+
 const syncServerSessionCookie = async (accessToken: string) => {
     await fetch('/api/auth/session', {
         method: 'POST',
@@ -105,6 +113,7 @@ export const useAuthStore = create<AuthState>()(
             login: async (email, password) => {
                 set({ isLoading: true });
                 try {
+                    ensureSupabaseConfigured();
                     const { data, error } = await supabase.auth.signInWithPassword({
                         email,
                         password,
@@ -150,6 +159,7 @@ export const useAuthStore = create<AuthState>()(
             signup: async (email, password, fullName) => {
                 set({ isLoading: true });
                 try {
+                    ensureSupabaseConfigured();
                     const { error } = await supabase.auth.signUp({
                         email,
                         password,
@@ -168,7 +178,9 @@ export const useAuthStore = create<AuthState>()(
             },
 
             logout: async () => {
-                await supabase.auth.signOut();
+                if (isSupabaseConfigured) {
+                    await supabase.auth.signOut();
+                }
                 await clearServerSessionCookie();
                 clearStoredWorkspaceId();
                 set({
@@ -183,6 +195,19 @@ export const useAuthStore = create<AuthState>()(
             checkAuth: async () => {
                 set({ isLoading: true });
                 try {
+                    if (!isSupabaseConfigured) {
+                        await clearServerSessionCookie();
+                        clearStoredWorkspaceId();
+                        set({
+                            user: null,
+                            isAuthenticated: false,
+                            isLoading: false,
+                            activeWorkspaceId: null,
+                            activeRole: null,
+                        });
+                        return;
+                    }
+
                     const { data } = await supabase.auth.getSession();
                     const accessToken = data.session?.access_token;
                     if (!accessToken) {

@@ -1,6 +1,6 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 const MAX_RETRIES = 2;
@@ -30,11 +30,18 @@ export const api = axios.create({
 
 api.interceptors.request.use(
     async (config) => {
-        const { data } = await supabase.auth.getSession();
-        const token = data.session?.access_token ?? null;
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        if (isSupabaseConfigured) {
+            try {
+                const { data } = await supabase.auth.getSession();
+                const token = data.session?.access_token ?? null;
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+            } catch {
+                // Skip auth header injection when Supabase is unavailable.
+            }
         }
+
         const workspaceId = getWorkspaceId();
         if (workspaceId) {
             config.headers['X-Workspace-Id'] = workspaceId;
