@@ -160,10 +160,15 @@ export const useAuthStore = create<AuthState>()(
                 set({ isLoading: true });
                 try {
                     ensureSupabaseConfigured();
+                    const emailRedirectTo =
+                        typeof window !== 'undefined'
+                            ? `${window.location.origin}/login?confirmed=1`
+                            : undefined;
                     const { error } = await supabase.auth.signUp({
                         email,
                         password,
                         options: {
+                            emailRedirectTo,
                             data: {
                                 full_name: fullName,
                             },

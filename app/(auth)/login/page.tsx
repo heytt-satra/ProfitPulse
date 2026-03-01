@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth-store";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,15 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const { login, isLoading } = useAuthStore();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const queryError = searchParams.get("error_description") || searchParams.get("error") || "";
+    const infoMessage =
+        searchParams.get("confirmed") === "1"
+            ? "Email confirmed. You can sign in now."
+            : searchParams.get("signup") === "success"
+              ? "Check your inbox and confirm your email before signing in."
+              : "";
+    const activeError = error || queryError;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,13 +41,24 @@ export default function LoginPage() {
         try {
             await login(email, password);
             const redirectTarget =
-                typeof window !== "undefined"
-                    ? new URLSearchParams(window.location.search).get("redirect") || "/dashboard"
-                    : "/dashboard";
+                searchParams.get("redirect") || "/dashboard";
             router.push(redirectTarget);
         } catch (err: unknown) {
             const maybeError = err as LoginErrorResponse;
-            setError(maybeError.response?.data?.detail || maybeError.message || "Invalid credentials");
+            const rawMessage = maybeError.response?.data?.detail || maybeError.message || "Invalid credentials";
+            const message = rawMessage.toLowerCase();
+
+            if (message.includes("network error") || message.includes("failed to fetch")) {
+                setError("Could not reach API server. Verify NEXT_PUBLIC_API_URL and backend deployment.");
+                return;
+            }
+
+            if (message.includes("email not confirmed")) {
+                setError("Email is not confirmed yet. Open the confirmation link from your inbox, then sign in.");
+                return;
+            }
+
+            setError(rawMessage);
         }
     };
 
@@ -81,9 +101,14 @@ export default function LoginPage() {
                             />
                         </div>
 
-                        {error && (
+                        {activeError && (
                             <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
-                                {error}
+                                {activeError}
+                            </div>
+                        )}
+                        {!activeError && infoMessage && (
+                            <div className="p-3 rounded-lg bg-coral/10 border border-coral/30 text-coral text-sm">
+                                {infoMessage}
                             </div>
                         )}
 

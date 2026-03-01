@@ -2,7 +2,13 @@ import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_URL =
+    process.env.NEXT_PUBLIC_API_URL ??
+    (process.env.NODE_ENV === 'development'
+        ? 'http://localhost:8000/api/v1'
+        : typeof window !== 'undefined'
+          ? `${window.location.origin}/api/v1`
+          : 'http://localhost:8000/api/v1');
 const MAX_RETRIES = 2;
 const BASE_RETRY_DELAY_MS = 300;
 const RETRYABLE_METHODS = new Set(['get', 'head', 'options']);
@@ -76,6 +82,8 @@ api.interceptors.response.use(
 
         if (error.code === 'ECONNABORTED') {
             toast.error('Request timed out. Please try again.');
+        } else if (!status && (error.message === 'Network Error' || error.message === 'Failed to fetch')) {
+            toast.error('Cannot reach API server. Verify NEXT_PUBLIC_API_URL and backend availability.');
         } else if (status === 401) {
             toast.error('Your session has expired. Please sign in again.');
         } else if (status === 403) {
