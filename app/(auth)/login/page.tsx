@@ -52,6 +52,10 @@ function LoginPageContent() {
                 setError("Could not reach API server. Verify NEXT_PUBLIC_API_URL and backend deployment.");
                 return;
             }
+            if (message.includes("status code 404")) {
+                setError("Auth endpoint not found. Set NEXT_PUBLIC_API_URL to your backend base URL (it should resolve to /api/v1).");
+                return;
+            }
 
             if (message.includes("email not confirmed")) {
                 setError("Email is not confirmed yet. Open the confirmation link from your inbox, then sign in.");

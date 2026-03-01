@@ -2,13 +2,42 @@ import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
-const API_URL =
-    process.env.NEXT_PUBLIC_API_URL ??
-    (process.env.NODE_ENV === 'development'
-        ? 'http://localhost:8000/api/v1'
-        : typeof window !== 'undefined'
-          ? `${window.location.origin}/api/v1`
-          : 'http://localhost:8000/api/v1');
+const trimTrailingSlash = (value: string) => value.replace(/\/+$/, '');
+
+const withApiV1Path = (value: string) => {
+    const trimmed = trimTrailingSlash(value.trim());
+
+    if (/\/api\/v1$/i.test(trimmed)) {
+        return trimmed;
+    }
+    if (/\/api$/i.test(trimmed)) {
+        return `${trimmed}/v1`;
+    }
+
+    try {
+        const parsed = new URL(trimmed);
+        const pathname = trimTrailingSlash(parsed.pathname);
+        if (!pathname || pathname === '/') {
+            parsed.pathname = '/api/v1';
+            return trimTrailingSlash(parsed.toString());
+        }
+        return trimmed;
+    } catch {
+        if (!trimmed || trimmed === '/') {
+            return '/api/v1';
+        }
+        return trimmed;
+    }
+};
+
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = configuredApiUrl
+    ? withApiV1Path(configuredApiUrl)
+    : process.env.NODE_ENV === 'development'
+      ? 'http://localhost:8000/api/v1'
+      : typeof window !== 'undefined'
+        ? `${window.location.origin}/api/v1`
+        : 'http://localhost:8000/api/v1';
 const MAX_RETRIES = 2;
 const BASE_RETRY_DELAY_MS = 300;
 const RETRYABLE_METHODS = new Set(['get', 'head', 'options']);
@@ -84,6 +113,8 @@ api.interceptors.response.use(
             toast.error('Request timed out. Please try again.');
         } else if (!status && (error.message === 'Network Error' || error.message === 'Failed to fetch')) {
             toast.error('Cannot reach API server. Verify NEXT_PUBLIC_API_URL and backend availability.');
+        } else if (status === 404 && String(config?.url || '').includes('/auth/session')) {
+            toast.error('Auth endpoint not found. Verify NEXT_PUBLIC_API_URL points to backend /api/v1.');
         } else if (status === 401) {
             toast.error('Your session has expired. Please sign in again.');
         } else if (status === 403) {
